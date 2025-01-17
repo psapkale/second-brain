@@ -15,12 +15,17 @@ datasource db {
 
 model User {
   id         String      @id @default(uuid())
+  name       String
+  email      String      @unique
+  password   String
   containers Container[]
+  imgUrl     String
 }
 
 model Container {
   id        String   @id @default(uuid())
   title     String
+  isPublid  Boolean
   creator   User     @relation(fields: [creatorId], references: [id])
   creatorId String
   posts     Post[]
