@@ -12,3 +12,5 @@ export const UserZodSchema = z.object({
       .regex(/[a-z]/, { message: "must contain a lowercase letter" }),
    imgUrl: z.string().optional(),
 });
+
+export const TokenZodSchema = z.string();
