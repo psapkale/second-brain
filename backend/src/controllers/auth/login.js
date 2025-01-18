@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 import { prisma } from "../../db/prisma.js";
 
 export const login = async (req, res) => {
@@ -12,16 +13,16 @@ export const login = async (req, res) => {
 
    try {
       const user = await prisma.user.findUnique({
-         where: email,
+         where: { email },
       });
 
       if (!user) {
          throw new Error("User not found");
       }
 
-      const decodedPassword = jwt.decode(user.password);
+      const isCorrectPassword = await bcrypt.compare(password, user.password);
 
-      if (decodedPassword !== password) {
+      if (!isCorrectPassword) {
          throw new Error("Password is incorrect");
       }
 
@@ -31,19 +32,20 @@ export const login = async (req, res) => {
       );
 
       res.status(200).json({
-         message: "User created successfully",
+         message: "Login successfully",
          user: {
             name: user.name,
             email: user.email,
-            containers: user.containers,
             imgUrl: user.imgUrl,
          },
          token,
       });
    } catch (err) {
+      console.log(err);
+
       res.status(500).json({
          message: "Failed to login",
-         error: err,
+         error: { err, message: err.message },
       });
    }
 };

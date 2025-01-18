@@ -10,5 +10,5 @@ export const UserZodSchema = z.object({
       .regex(/\W/, { message: "must contain a special character" })
       .regex(/[A-Z]/, { message: "must contain an uppercase letter" })
       .regex(/[a-z]/, { message: "must contain a lowercase letter" }),
-   imgUrl: z.string(),
+   imgUrl: z.string().optional(),
 });

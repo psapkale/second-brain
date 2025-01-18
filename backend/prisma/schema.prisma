@@ -25,7 +25,7 @@ model User {
 model Container {
   id        String   @id @default(uuid())
   title     String
-  isPublid  Boolean
+  isPublic  Boolean  @default(false)
   creator   User     @relation(fields: [creatorId], references: [id])
   creatorId String
   posts     Post[]

@@ -8,14 +8,17 @@ export const signin = async (req, res) => {
 
    if (!userSchema.success) {
       return res.status(411).json({
-         message: "Invalid input",
+         message: "Invalid input (name, email and password are required)",
          error: userSchema.error.errors.map((e) => e.message),
       });
    }
+   console.log(userSchema);
 
    try {
       const existingUser = await prisma.user.findFirst({
-         where: userSchema.data.email,
+         where: {
+            email: userSchema.data.email,
+         },
       });
 
       if (existingUser) {
@@ -28,12 +31,28 @@ export const signin = async (req, res) => {
          name: userSchema.data.name,
          email: userSchema.data.email,
          password: hashedPassword,
-         containers: [],
-         imgUrl: userSchema.data.imgUrl,
+         imgUrl: !userSchema.data.imgUrl
+            ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS-_lB_YIKaaPz_vciNdT2ebnlUl6gJE5kBQ&s"
+            : userSchema.data.imgUrl,
       };
 
       const user = await prisma.user.create({
-         data: newUser,
+         data: {
+            ...newUser,
+            containers: {
+               create: [
+                  {
+                     title: `${
+                        newUser.name.charAt(0).toUpperCase() +
+                        newUser.name.slice(1)
+                     }'s Space`,
+                  },
+               ],
+            },
+         },
+         include: {
+            containers: true,
+         },
       });
 
       if (user) {
@@ -46,16 +65,17 @@ export const signin = async (req, res) => {
             user: {
                name: user.name,
                email: user.email,
-               containers: user.containers,
                imgUrl: user.imgUrl,
             },
             token,
          });
       }
    } catch (err) {
+      console.log(err);
+
       res.status(500).json({
          message: "Failed to create the user",
-         error: err,
+         error: { err, message: err.message },
       });
    }
 };
