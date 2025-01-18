@@ -3,6 +3,22 @@ import jwt from "jsonwebtoken";
 import { prisma } from "../../db/prisma.js";
 import { UserZodSchema } from "../../schemaTypes/index.js";
 
+const customSpaceName = (name) => {
+   const words = name.split(" ");
+
+   const firstCapitalizedWord =
+      words[0].charAt(0).toUpperCase() + words[0].slice(1);
+
+   if (words.length > 1 && words[1].length) {
+      const secondCapitalizedWord =
+         words[1].charAt(0).toUpperCase() + words[1].slice(1);
+
+      return firstCapitalizedWord + " " + secondCapitalizedWord + "'s space";
+   }
+
+   return firstCapitalizedWord + "'s space";
+};
+
 export const signin = async (req, res) => {
    const userSchema = UserZodSchema.safeParse(req.body);
 
@@ -12,7 +28,6 @@ export const signin = async (req, res) => {
          error: userSchema.error.errors.map((e) => e.message),
       });
    }
-   console.log(userSchema);
 
    try {
       const existingUser = await prisma.user.findFirst({
@@ -36,16 +51,15 @@ export const signin = async (req, res) => {
             : userSchema.data.imgUrl,
       };
 
+      const spaceName = customSpaceName(newUser.name);
+
       const user = await prisma.user.create({
          data: {
             ...newUser,
             containers: {
                create: [
                   {
-                     title: `${
-                        newUser.name.charAt(0).toUpperCase() +
-                        newUser.name.slice(1)
-                     }'s Space`,
+                     title: spaceName,
                   },
                ],
             },
