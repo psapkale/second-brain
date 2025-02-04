@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import admin from "firebase-admin";
 import { TokenZodSchema } from "../../schemaTypes/index.js";
 
 export const authMiddleware = async (req, res, next) => {
@@ -15,10 +15,10 @@ export const authMiddleware = async (req, res, next) => {
 
    try {
       const token = tokenSchema.data;
+      const decodedToken = await admin.auth().verifyIdToken(token);
+      console.log(decodedToken);
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      req.userData = decoded;
+      req.userData = decodedToken;
       next();
    } catch (err) {
       console.log(err);

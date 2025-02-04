@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import admin from "firebase-admin";
+import { serviceAccount } from "./controllers/auth/second-brain-a0a5f-firebase-adminsdk-fbsvc-0017a3a69e.js";
 import { signin } from "./controllers/auth/signin.js";
 import { login } from "./controllers/auth/login.js";
 import { authMiddleware } from "./controllers/auth/authMiddleware.js";
@@ -12,6 +14,11 @@ import { updatePublicStatusOfContainer } from "./controllers/userManager/updateP
 const app = express();
 const apiRouter = express.Router();
 const port = 8080;
+
+admin.initializeApp({
+   credential: admin.credential.cert(serviceAccount),
+   projectId: serviceAccount.project_id,
+});
 
 app.use(express.json());
 app.use(cors());

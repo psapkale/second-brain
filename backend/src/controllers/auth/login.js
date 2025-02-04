@@ -1,17 +1,21 @@
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import admin from "firebase-admin";
 import { prisma } from "../../db/prisma.js";
 
 export const login = async (req, res) => {
-   const { email, password } = req.body;
+   const { token } = req.body;
 
-   if (!email.length || !password.length) {
+   if (!token) {
       return res.status(411).json({
-         message: "Input not provided",
+         message: "Token not provided",
       });
    }
 
    try {
+      const decodedToken = await admin.auth().verifyIdToken(token);
+      console.log(decodedToken);
+
+      const { email } = decodedToken;
+
       const user = await prisma.user.findUnique({
          where: { email },
       });
@@ -19,17 +23,6 @@ export const login = async (req, res) => {
       if (!user) {
          throw new Error("User not found");
       }
-
-      const isCorrectPassword = await bcrypt.compare(password, user.password);
-
-      if (!isCorrectPassword) {
-         throw new Error("Password is incorrect");
-      }
-
-      const token = jwt.sign(
-         { email: user.email, name: user.name },
-         process.env.JWT_SECRET
-      );
 
       res.status(200).json({
          message: "Login successfully",

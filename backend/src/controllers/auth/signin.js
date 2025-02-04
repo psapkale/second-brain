@@ -1,7 +1,5 @@
-import { hash } from "bcrypt";
-import jwt from "jsonwebtoken";
 import { prisma } from "../../db/prisma.js";
-import { UserZodSchema } from "../../schemaTypes/index.js";
+import admin from "firebase-admin";
 
 const customSpaceName = (name) => {
    const words = name.split(" ");
@@ -20,35 +18,34 @@ const customSpaceName = (name) => {
 };
 
 export const signin = async (req, res) => {
-   const userSchema = UserZodSchema.safeParse(req.body);
+   const { token } = req.body;
 
-   if (!userSchema.success) {
+   if (!token) {
       return res.status(411).json({
-         message: "Invalid input (name, email and password are required)",
-         error: userSchema.error.errors.map((e) => e.message),
+         message: "Token not provided",
       });
    }
 
    try {
+      const decodedToken = await admin.auth().verifyIdToken(token);
+      console.log(decodedToken);
+
+      const { email, name, picture } = decodedToken;
+
       const existingUser = await prisma.user.findFirst({
-         where: {
-            email: userSchema.data.email,
-         },
+         where: { email },
       });
 
       if (existingUser) {
          throw new Error("User already exists with provided email");
       }
 
-      const hashedPassword = await hash(userSchema.data.password, 10);
-
       const newUser = {
-         name: userSchema.data.name,
-         email: userSchema.data.email,
-         password: hashedPassword,
-         imgUrl: !userSchema.data.imgUrl
+         name,
+         email,
+         imgUrl: !picture
             ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS-_lB_YIKaaPz_vciNdT2ebnlUl6gJE5kBQ&s"
-            : userSchema.data.imgUrl,
+            : picture,
       };
 
       const spaceName = customSpaceName(newUser.name);
@@ -70,10 +67,6 @@ export const signin = async (req, res) => {
       });
 
       if (user) {
-         const token = jwt.sign(
-            { email: user.email, name: user.name },
-            process.env.JWT_SECRET
-         );
          res.status(200).json({
             message: "User created successfully",
             user: {
