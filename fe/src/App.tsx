@@ -1,8 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
+import { Toaster } from "react-hot-toast";
 import LandingPage from "./pages/routes/LandingPage";
 import NotFound from "./pages/not-found/NotFound";
-import LoginPage from "./pages/auth/LoginPage";
+import AuthPage from "./pages/auth";
 
 function App() {
    const router = createBrowserRouter([
@@ -12,7 +13,7 @@ function App() {
       },
       {
          path: "/login",
-         element: <LoginPage />,
+         element: <AuthPage />,
       },
       {
          path: "*",
@@ -20,7 +21,12 @@ function App() {
       },
    ]);
 
-   return <RouterProvider router={router} />;
+   return (
+      <>
+         <Toaster position="top-center" reverseOrder={true} />
+         <RouterProvider router={router} />
+      </>
+   );
 }
 
 export default App;
