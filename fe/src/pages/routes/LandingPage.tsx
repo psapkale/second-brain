@@ -5,7 +5,7 @@ const LandingPage = () => {
    return (
       <div>
          <nav className="flex items-center justify-end py-1 px-2">
-            <Link to={"/login"}>
+            <Link to={"/auth"}>
                <Button>Login</Button>
             </Link>
          </nav>

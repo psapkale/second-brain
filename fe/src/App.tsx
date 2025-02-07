@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import LandingPage from "./pages/routes/LandingPage";
 import NotFound from "./pages/not-found/NotFound";
 import AuthPage from "./pages/auth";
+import Layout from "./components/Layout";
 
 function App() {
    const router = createBrowserRouter([
@@ -12,8 +13,12 @@ function App() {
          element: <LandingPage />,
       },
       {
-         path: "/login",
+         path: "/auth",
          element: <AuthPage />,
+      },
+      {
+         path: "/spaces",
+         element: <Layout />,
       },
       {
          path: "*",

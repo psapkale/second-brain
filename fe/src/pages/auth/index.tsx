@@ -7,10 +7,12 @@ import { signInWithPopup } from "firebase/auth";
 import { useState } from "react";
 import _ from "lodash";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function AuthPage() {
    const { setUser } = useUser();
    const [isLoading, setIsLoading] = useState<boolean>(false);
+   const navigate = useNavigate();
 
    async function signInWithGoogle() {
       setIsLoading(true);
@@ -26,16 +28,18 @@ export default function AuthPage() {
 
          setUser({ ...user, token, createdAt: _.now() });
          toast.success(message);
-         setIsLoading(false);
+         navigate("/spaces");
       } catch (err) {
-         setIsLoading(false);
          console.error(err);
 
          if (axios.isAxiosError(err)) {
             if (err.response) {
-               toast.error(err.response.data.error.message);
+               return toast.error(err.response.data.error.message);
             }
          }
+         toast.error("Failed to signin");
+      } finally {
+         setIsLoading(false);
       }
    }
 
@@ -53,16 +57,18 @@ export default function AuthPage() {
 
          setUser({ ...user, token, createdAt: _.now() });
          toast.success(message);
-         setIsLoading(false);
+         navigate("/spaces");
       } catch (err) {
-         setIsLoading(false);
          console.error(err);
 
          if (axios.isAxiosError(err)) {
             if (err.response) {
-               toast.error(err.response.data.error.message);
+               return toast.error(err.response.data.error.message);
             }
          }
+         toast.error("Failed to login");
+      } finally {
+         setIsLoading(false);
       }
    }
 
@@ -172,7 +178,7 @@ export default function AuthPage() {
                                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                  ></path>
                               </svg>
-                              <span>Signing in...</span>
+                              <span>Logging in...</span>
                            </div>
                         )}
                      </Button>
