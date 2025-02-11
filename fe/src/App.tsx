@@ -1,10 +1,11 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "sonner";
 import LandingPage from "./pages/routes/LandingPage";
 import NotFound from "./pages/not-found/NotFound";
 import AuthPage from "./pages/auth";
 import Layout from "./components/Layout";
+import SpaceController from "./components/SpaceController";
 
 function App() {
    const router = createBrowserRouter([
@@ -19,6 +20,12 @@ function App() {
       {
          path: "/spaces",
          element: <Layout />,
+         children: [
+            {
+               path: ":spaceId",
+               element: <SpaceController />,
+            },
+         ],
       },
       {
          path: "*",
@@ -28,7 +35,7 @@ function App() {
 
    return (
       <>
-         <Toaster position="top-center" reverseOrder={true} />
+         <Toaster position="bottom-center" />
          <RouterProvider router={router} />
       </>
    );

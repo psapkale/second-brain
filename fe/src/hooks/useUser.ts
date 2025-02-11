@@ -1,12 +1,5 @@
+import { UserData } from "@/types";
 import _ from "lodash";
-
-export interface UserData {
-   name: string;
-   email: string;
-   imgUrl: string;
-   token: string;
-   createdAt: number;
-}
 
 export const useUser = () => {
    const getUser = () => {

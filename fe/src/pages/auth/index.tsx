@@ -6,7 +6,7 @@ import { auth, googleProvider } from "../../../firebase";
 import { signInWithPopup } from "firebase/auth";
 import { useState } from "react";
 import _ from "lodash";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 export default function AuthPage() {
