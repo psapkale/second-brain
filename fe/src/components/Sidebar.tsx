@@ -5,6 +5,17 @@ import { PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import {
+   Dialog,
+   DialogContent,
+   DialogDescription,
+   DialogFooter,
+   DialogHeader,
+   DialogTitle,
+   DialogTrigger,
+} from "./ui/dialog";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
 const Sidebar = () => {
    const { getUser, getToken } = useUser();
@@ -12,7 +23,46 @@ const Sidebar = () => {
    const token: string = getToken();
    const navigate = useNavigate();
    const [spaces, setSpaces] = useState<SpaceData[]>([]);
+   const [title, setTitle] = useState("");
    const [loading, setLoading] = useState<boolean>(true);
+   const [isOpen, setIsOpen] = useState(false);
+
+   const handleCreateSpace = async () => {
+      if (title.length < 2) {
+         return toast.error("Title must contain atleast 2 letters");
+      }
+
+      try {
+         const res = await axios.post(
+            "http://localhost:8080/api/v1/create-container",
+            {
+               title: title,
+            },
+            {
+               headers: {
+                  Authorization: `Bearer ${token}`,
+               },
+            }
+         );
+         console.log(res.data);
+
+         toast.success("Space created successfully", {
+            icon: "✅",
+         });
+
+         fetchContainers();
+         setIsOpen(false);
+      } catch (err) {
+         console.error(err);
+
+         if (axios.isAxiosError(err)) {
+            if (err.response) {
+               return toast.error(err.response.data.error.message);
+            }
+         }
+         toast.error("Failed to fetch spaces");
+      }
+   };
 
    const fetchContainers = async () => {
       try {
@@ -51,7 +101,7 @@ const Sidebar = () => {
    }
 
    return (
-      <div className="border-r border-black w-[23%] py-4 px-3 flex gap-5 flex-col">
+      <div className="border-r-2 border-slate-200 w-[23%] py-4 px-3 flex gap-5 flex-col">
          <span className="text-4xl font-semibold">Second Brain</span>
 
          {/* User info */}
@@ -81,9 +131,36 @@ const Sidebar = () => {
             </div>
          )}
 
-         <button className="w-full bg-black text-white rounded-lg py-2 px-4 cursor-pointer">
-            <PlusCircle />
-         </button>
+         <Dialog open={isOpen}>
+            <DialogTrigger asChild>
+               <Button variant="outline" onClick={() => setIsOpen(true)}>
+                  <PlusCircle />
+                  <span>Create Space</span>
+               </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+               <DialogHeader>
+                  <DialogTitle>Create Space</DialogTitle>
+                  <DialogDescription>
+                     Create a independent space to organize the internet.
+                  </DialogDescription>
+               </DialogHeader>
+               <div>
+                  <Input
+                     type="text"
+                     placeholder="Title"
+                     value={title}
+                     onChange={(e) => setTitle(e.target.value)}
+                  />
+               </div>
+               <DialogFooter>
+                  <Button onClick={handleCreateSpace}>
+                     <PlusCircle />
+                     <span>Create Space</span>
+                  </Button>
+               </DialogFooter>
+            </DialogContent>
+         </Dialog>
       </div>
    );
 };
