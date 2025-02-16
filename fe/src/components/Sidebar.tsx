@@ -60,11 +60,13 @@ const Sidebar = () => {
                return toast.error(err.response.data.error.message);
             }
          }
-         toast.error("Failed to fetch spaces");
+         toast.error("Failed to create space");
       }
    };
 
    const fetchContainers = async () => {
+      setLoading(true);
+
       try {
          const res = await axios.get(
             "http://localhost:8080/api/v1/containers",
@@ -131,7 +133,7 @@ const Sidebar = () => {
             </div>
          )}
 
-         <Dialog open={isOpen}>
+         <Dialog open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
             <DialogTrigger asChild>
                <Button variant="outline" onClick={() => setIsOpen(true)}>
                   <PlusCircle />

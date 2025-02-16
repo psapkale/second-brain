@@ -13,3 +13,12 @@ export interface SpaceData {
    creatorId: string;
    createdAt: string;
 }
+
+export type ContentType = "TWITTER" | "YOUTUBE";
+
+export interface PostData {
+   id: string;
+   title: string;
+   link: string;
+   contentType: ContentType;
+}
