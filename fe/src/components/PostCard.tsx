@@ -66,6 +66,45 @@ const PostCard = ({ post }: PostCardProps) => {
       }
    }, [post]);
 
+   useEffect(() => {
+      const addInstagramTheme = () => {
+         const instaEmbeds = document.querySelectorAll(".instagram-media");
+         instaEmbeds.forEach((embed) => {
+            embed.classList.toggle("data-theme", isDarkMode.current);
+         });
+      };
+
+      if (post.link.includes("instagram.com")) {
+         const script = document.createElement("script");
+         script.src = "https://www.instagram.com/embed.js";
+         script.async = true;
+         document.body.appendChild(script);
+
+         script.onload = () => {
+            window.instgrm?.Embeds.process();
+            addInstagramTheme();
+         };
+
+         const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+               if (
+                  mutation.type === "attributes" &&
+                  mutation.attributeName === "class"
+               ) {
+                  addInstagramTheme();
+               }
+            });
+         });
+
+         observer.observe(document.documentElement, { attributes: true });
+
+         return () => {
+            document.body.removeChild(script);
+            observer.disconnect();
+         };
+      }
+   }, [post]);
+
    const loadTwittrContent = () => {
       let adjustedLink = post.link;
       if (post.link.includes("x.com")) {
@@ -112,6 +151,30 @@ const PostCard = ({ post }: PostCardProps) => {
       );
    };
 
+   const loadInstagrmContent = () => {
+      return (
+         post.link.includes("instagram.com") && (
+            <div
+               className="mt-4 w-full h-[300px] dark:bg-[#1A1E24] bg-gray-50 overflow-y-scroll custom-scrollbar"
+               style={{
+                  borderRadius: "8px",
+                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+               }}
+            >
+               <blockquote
+                  className="instagram-media w-full"
+                  data-instgrm-permalink={post.link}
+                  data-instgrm-version="15"
+                  style={{
+                     maxWidth: "100%",
+                     boxSizing: "border-box",
+                  }}
+               ></blockquote>
+            </div>
+         )
+      );
+   };
+
    const renderIcon = () => {
       const icon = {
          src: "",
@@ -124,6 +187,9 @@ const PostCard = ({ post }: PostCardProps) => {
       } else if (post.contentType === "YOUTUBE") {
          icon.src = "/youtube.svg";
          icon.alt = "Youtube icon";
+      } else if (post.contentType === "INSTAGRAM") {
+         icon.src = "/instagram.svg";
+         icon.alt = "Instagram icon";
       }
 
       return <img src={icon.src} alt={icon.alt} className="w-4 h-4" />;
@@ -136,6 +202,10 @@ const PostCard = ({ post }: PostCardProps) => {
 
       if (post.contentType === "YOUTUBE") {
          return loadYoutbeContent();
+      }
+
+      if (post.contentType === "INSTAGRAM") {
+         return loadInstagrmContent();
       }
 
       return <div></div>;

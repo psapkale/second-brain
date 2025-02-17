@@ -14,7 +14,7 @@ export interface SpaceData {
    createdAt: string;
 }
 
-export type ContentType = "TWITTER" | "YOUTUBE";
+export type ContentType = "TWITTER" | "YOUTUBE" | "INSTAGRAM";
 
 export interface PostData {
    id: string;

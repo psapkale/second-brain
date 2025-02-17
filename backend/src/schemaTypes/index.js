@@ -20,7 +20,7 @@ export const PostZodSchema = z.object({
       .regex(/^https:\/\/[a-zA-Z0-9\-._~:\/?#\[\]@!$&'()*+,;=]+$/, {
          message: "link should be in the form of url",
       }),
-   contentType: z.enum(["TWITTER", "YOUTUBE"], {
+   contentType: z.enum(["TWITTER", "YOUTUBE", "INSTAGRAM"], {
       message: "contentType should be 'TWITTER' | 'YOUTUBE'",
    }),
 });

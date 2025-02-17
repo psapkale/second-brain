@@ -1,7 +1,7 @@
 import { useUser } from "@/hooks/useUser";
 import { ContentType, PostData } from "@/types";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
@@ -17,12 +17,6 @@ import {
 } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import {
-   DropdownMenu,
-   DropdownMenuContent,
-   DropdownMenuItem,
-   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
 import PostCard from "./PostCard";
 
 const SpaceController = () => {
@@ -32,6 +26,11 @@ const SpaceController = () => {
    const [title, setTitle] = useState("");
    const [isOpen, setIsOpen] = useState(false);
    const [link, setLink] = useState("");
+   const contentTypes = useRef<ContentType[]>([
+      "TWITTER",
+      "YOUTUBE",
+      "INSTAGRAM",
+   ]);
    const [contentType, setContentType] = useState<ContentType>("TWITTER");
    const [loading, setLoading] = useState(true);
 
@@ -51,6 +50,13 @@ const SpaceController = () => {
             link.startsWith("https://youtube.com/") ||
             link.startsWith("https://www.youtu.be/") ||
             link.startsWith("https://youtu.be/")
+         );
+      }
+
+      if (contentType === "INSTAGRAM") {
+         return (
+            link.startsWith("https://www.instagram.com/") ||
+            link.startsWith("https://instagram.com/")
          );
       }
 
@@ -184,28 +190,21 @@ const SpaceController = () => {
                      <Label htmlFor="contentType" className="text-right">
                         Content Type
                      </Label>
-                     <DropdownMenu>
-                        <DropdownMenuTrigger>
-                           <Button
-                              variant={"outline"}
-                              className="w-full lowercase"
-                           >
-                              {contentType}
-                           </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                           <DropdownMenuItem
-                              onClick={() => setContentType("TWITTER")}
-                           >
-                              Twitter
-                           </DropdownMenuItem>
-                           <DropdownMenuItem
-                              onClick={() => setContentType("YOUTUBE")}
-                           >
-                              Youtube
-                           </DropdownMenuItem>
-                        </DropdownMenuContent>
-                     </DropdownMenu>
+                     <div className="flex items-center gap-3">
+                        {contentTypes.current.map((plat) => (
+                           <img
+                              key={plat}
+                              src={`/${plat.toLowerCase()}.svg`}
+                              alt={`${plat} icon`}
+                              className={`w-5 h-5 cursor-pointer ${
+                                 contentType === plat
+                                    ? "opacity-100"
+                                    : "opacity-50"
+                              } hover:opacity-100 object-contain`}
+                              onClick={() => setContentType(plat)}
+                           />
+                        ))}
+                     </div>
                   </div>
                </div>
                <DialogFooter>
