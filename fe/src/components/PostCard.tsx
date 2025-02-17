@@ -66,7 +66,7 @@ const PostCard = ({ post }: PostCardProps) => {
       }
    }, [post]);
 
-   const renderContent = () => {
+   const loadTwittrContent = () => {
       let adjustedLink = post.link;
       if (post.link.includes("x.com")) {
          adjustedLink = post.link.replace("x.com", "twitter.com");
@@ -82,7 +82,7 @@ const PostCard = ({ post }: PostCardProps) => {
          >
             <blockquote
                className="twitter-tweet w-full"
-               data-theme="light"
+               data-theme={isDarkMode ? "dark" : "light"}
                style={{
                   maxWidth: "100%",
                   boxSizing: "border-box",
@@ -94,14 +94,60 @@ const PostCard = ({ post }: PostCardProps) => {
       );
    };
 
+   const loadYoutbeContent = () => {
+      const videoId = post.link.includes("youtube.com")
+         ? new URL(post.link).searchParams.get("v")
+         : post.link.split("/").pop();
+
+      return (
+         videoId && (
+            <iframe
+               className="w-full mt-5 h-[300px] rounded-lg shadow-md dark:border dark:border-gray-800"
+               src={`https://www.youtube.com/embed/${videoId}`}
+               frameBorder={0}
+               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+               allowFullScreen
+            ></iframe>
+         )
+      );
+   };
+
+   const renderIcon = () => {
+      const icon = {
+         src: "",
+         alt: "",
+      };
+
+      if (post.contentType === "TWITTER") {
+         icon.src = "/twitter.svg";
+         icon.alt = "Twitter icon";
+      } else if (post.contentType === "YOUTUBE") {
+         icon.src = "/youtube.svg";
+         icon.alt = "Youtube icon";
+      }
+
+      return <img src={icon.src} alt={icon.alt} className="w-4 h-4" />;
+   };
+
+   const renderContent = () => {
+      if (post.contentType === "TWITTER") {
+         return loadTwittrContent();
+      }
+
+      if (post.contentType === "YOUTUBE") {
+         return loadYoutbeContent();
+      }
+
+      return <div></div>;
+   };
+
    return (
-      <div className="w-[400px]">
-         <div className="p-4 h-auto font-poppins dark:bg-[#1A1E24] dark:border-gray-800 border-gray-200 border shadow-md bg-white rounded-lg w-full transition duration-200 hover:scale-[1.05] hover:shadow-lg dark:hover:bg-gray-900 hover:bg-gray-100">
+      <div style={{ width: post.contentType === "YOUTUBE" ? 600 : 400 }}>
+         <div className="p-4 h-auto font-poppins dark:bg-[#1A1E24] dark:border-gray-800 border-gray-200 border shadow-md bg-white rounded-lg w-full transition duration-200 hover:scale-[1.01] hover:shadow-lg dark:hover:bg-gray-900 hover:bg-gray-100">
             <div className="flex justify-between">
                <div className="flex items-center">
-                  {/* Twitter icon */}
-                  <div className="pr-2 ml-3  "></div>
-                  <p className="text-lg dark:text-gray-200 text-gray-800">
+                  <div className="pr-2 ml-3">{renderIcon()}</div>
+                  <p className="text-[1rem] dark:text-gray-200 text-gray-800 capitalize">
                      {post.title}
                   </p>
                </div>

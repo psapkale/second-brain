@@ -39,12 +39,19 @@ const SpaceController = () => {
       if (contentType === "TWITTER") {
          return (
             link.startsWith("https://x.com/") ||
-            link.startsWith("https://twitter.com/")
+            link.startsWith("https://www.x.com/") ||
+            link.startsWith("https://twitter.com/") ||
+            link.startsWith("https://www.twitter.com/")
          );
       }
 
       if (contentType === "YOUTUBE") {
-         return link.startsWith("https://youtube.com/");
+         return (
+            link.startsWith("https://www.youtube.com/") ||
+            link.startsWith("https://youtube.com/") ||
+            link.startsWith("https://www.youtu.be/") ||
+            link.startsWith("https://youtu.be/")
+         );
       }
 
       return false;
@@ -124,11 +131,11 @@ const SpaceController = () => {
    }, [spaceId]);
 
    if (loading) {
-      return <div>be hold..</div>;
+      return <div className="w-full">be hold..</div>;
    }
 
    return (
-      <div className="w-full p-10">
+      <div className="w-full p-10 overflow-y-scroll">
          <div className="flex items-center justify-start flex-wrap gap-5">
             {posts.map((post) => (
                <PostCard key={post.id} post={post} />

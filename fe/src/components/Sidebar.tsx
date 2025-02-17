@@ -3,7 +3,7 @@ import { SpaceData, UserData } from "@/types";
 import axios from "axios";
 import { PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import {
    Dialog,
@@ -22,6 +22,7 @@ const Sidebar = () => {
    const user: UserData = getUser();
    const token: string = getToken();
    const navigate = useNavigate();
+   const { spaceId } = useParams();
    const [spaces, setSpaces] = useState<SpaceData[]>([]);
    const [title, setTitle] = useState("");
    const [loading, setLoading] = useState<boolean>(true);
@@ -103,7 +104,7 @@ const Sidebar = () => {
    }
 
    return (
-      <div className="border-r-2 border-slate-200 w-[23%] py-4 px-3 flex gap-5 flex-col">
+      <div className="border-r-2 border-slate-200 w-[20%] h-full  top-0 left-0 py-4 px-3 bg-white flex gap-5 flex-col">
          <span className="text-4xl font-semibold">Second Brain</span>
 
          {/* User info */}
@@ -126,6 +127,9 @@ const Sidebar = () => {
                      to={`/spaces/${space.id}`}
                      key={space.id}
                      className="py-1 px-2 rounded-sm hover:bg-slate-100"
+                     style={{
+                        backgroundColor: spaceId === space.id ? "#f1f5f9" : "",
+                     }}
                   >
                      {space.title}
                   </Link>
