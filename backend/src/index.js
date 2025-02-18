@@ -10,6 +10,8 @@ import { createContainer } from "./controllers/userManager/createContainer.js";
 import { getAllPosts } from "./controllers/containerManager/getAllPosts.js";
 import { createPost } from "./controllers/containerManager/createPost.js";
 import { updatePublicStatusOfContainer } from "./controllers/userManager/updatePublicStatusOfContainer.js";
+import { deleteContainer } from "./controllers/userManager/deleteContainer.js";
+import { deletePost } from "./controllers/containerManager/deletePost.js";
 
 const app = express();
 const apiRouter = express.Router();
@@ -43,6 +45,20 @@ apiRouter.get("/:containerId/posts", authMiddleware, getAllPosts);
 
 // TODO create post
 apiRouter.post("/:containerId/create-post", authMiddleware, createPost);
+
+// TODO delete container
+apiRouter.delete(
+   "/:containerId/delete-container",
+   authMiddleware,
+   deleteContainer
+);
+
+// TODO delete post
+apiRouter.delete(
+   "/:containerId/delete-post/:postId",
+   authMiddleware,
+   deletePost
+);
 
 // TODO make container public
 apiRouter.post(
