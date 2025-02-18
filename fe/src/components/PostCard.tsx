@@ -1,8 +1,16 @@
 import { PostData } from "@/types";
 import { useEffect, useRef } from "react";
+import {
+   DropdownMenu,
+   DropdownMenuContent,
+   DropdownMenuItem,
+   DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Ellipsis, Trash } from "lucide-react";
 
 interface PostCardProps {
    post: PostData;
+   handleDeletePost: (post: PostData) => void;
 }
 
 declare global {
@@ -20,7 +28,7 @@ declare global {
    }
 }
 
-const PostCard = ({ post }: PostCardProps) => {
+const PostCard = ({ post, handleDeletePost }: PostCardProps) => {
    const isDarkMode = useRef(true);
 
    useEffect(() => {
@@ -215,11 +223,29 @@ const PostCard = ({ post }: PostCardProps) => {
       <div style={{ width: post.contentType === "YOUTUBE" ? 600 : 400 }}>
          <div className="p-4 h-auto font-poppins dark:bg-[#1A1E24] dark:border-gray-800 border-gray-200 border shadow-md bg-white rounded-lg w-full transition duration-200 hover:scale-[1.01] hover:shadow-lg dark:hover:bg-gray-900 hover:bg-gray-100">
             <div className="flex justify-between">
-               <div className="flex items-center">
-                  <div className="pr-2 ml-3">{renderIcon()}</div>
-                  <p className="text-[1rem] dark:text-gray-200 text-gray-800 capitalize">
-                     {post.title}
-                  </p>
+               <div className="w-full mx-3 flex items-center justify-between">
+                  <div className="flex items-center">
+                     <div className="pr-2">{renderIcon()}</div>
+                     <p className="text-[1rem] dark:text-gray-200 text-gray-800 capitalize">
+                        {post.title}
+                     </p>
+                  </div>
+                  <span className="self-end">
+                     <DropdownMenu>
+                        <DropdownMenuTrigger>
+                           <Ellipsis className="w-4 h-4" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                           <DropdownMenuItem>Rename</DropdownMenuItem>
+                           <DropdownMenuItem
+                              onClick={() => handleDeletePost(post)}
+                           >
+                              <Trash className="w-3 h-3 text-red-500" />
+                              <span>Delete</span>
+                           </DropdownMenuItem>
+                        </DropdownMenuContent>
+                     </DropdownMenu>
+                  </span>
                </div>
             </div>
             {renderContent()}

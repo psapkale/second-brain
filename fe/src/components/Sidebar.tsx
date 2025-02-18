@@ -1,7 +1,7 @@
 import { useUser } from "@/hooks/useUser";
 import { SpaceData, UserData } from "@/types";
 import axios from "axios";
-import { PlusCircle } from "lucide-react";
+import { Ellipsis, PlusCircle, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -16,6 +16,12 @@ import {
 } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import {
+   DropdownMenu,
+   DropdownMenuContent,
+   DropdownMenuItem,
+   DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 const Sidebar = () => {
    const { getUser, getToken } = useUser();
@@ -62,6 +68,35 @@ const Sidebar = () => {
             }
          }
          toast.error("Failed to create space");
+      }
+   };
+
+   const handleDeleteSpace = async (spaceTitle: string) => {
+      try {
+         const res = await axios.delete(
+            `http://localhost:8080/api/v1/${spaceId}/delete-container`,
+            {
+               headers: {
+                  Authorization: `Bearer ${token}`,
+               },
+            }
+         );
+         console.log(res.data);
+
+         toast.success(`${spaceTitle} deleted successfully`, {
+            icon: "🚮",
+         });
+         fetchContainers();
+         navigate("/spaces");
+      } catch (err) {
+         console.error(err);
+
+         if (axios.isAxiosError(err)) {
+            if (err.response) {
+               return toast.error(err.response.data.error.message);
+            }
+         }
+         toast.error(`Failed to delete ${spaceTitle}`);
       }
    };
 
@@ -124,14 +159,36 @@ const Sidebar = () => {
             <div className="flex gap-2 flex-col">
                {spaces.map((space) => (
                   <Link
-                     to={`/spaces/${space.id}`}
                      key={space.id}
-                     className="py-1 px-2 rounded-sm hover:bg-slate-100"
+                     to={`/spaces/${space.id}`}
+                     className="py-1 px-2 flex items-center justify-between rounded-sm hover:bg-slate-100"
                      style={{
                         backgroundColor: spaceId === space.id ? "#f1f5f9" : "",
                      }}
                   >
-                     {space.title}
+                     <span className="capitalize">{space.title}</span>
+                     <DropdownMenu>
+                        <DropdownMenuTrigger>
+                           <Ellipsis
+                              className="w-4 h-4"
+                              style={{
+                                 opacity: spaceId === space.id ? 1 : 0,
+                              }}
+                           />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                           <DropdownMenuItem>
+                              {space.isPublic ? "Private" : "Public"}
+                           </DropdownMenuItem>
+                           <DropdownMenuItem>Rename</DropdownMenuItem>
+                           <DropdownMenuItem
+                              onClick={() => handleDeleteSpace(space.title)}
+                           >
+                              <Trash className="w-3 h-3 text-red-500" />
+                              <span>Delete</span>
+                           </DropdownMenuItem>
+                        </DropdownMenuContent>
+                     </DropdownMenu>
                   </Link>
                ))}
             </div>

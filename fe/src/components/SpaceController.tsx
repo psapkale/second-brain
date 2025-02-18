@@ -24,7 +24,7 @@ const SpaceController = () => {
    const token = useUser().getToken();
    const [posts, setPosts] = useState<PostData[]>([]);
    const [title, setTitle] = useState("");
-   const [isOpen, setIsOpen] = useState(false);
+   const [isOpen, setIsOpen] = useState(false); // for modal
    const [link, setLink] = useState("");
    const contentTypes = useRef<ContentType[]>([
       "TWITTER",
@@ -104,6 +104,34 @@ const SpaceController = () => {
       }
    };
 
+   const handleDeletePost = async (post: PostData) => {
+      try {
+         const res = await axios.delete(
+            `http://localhost:8080/api/v1/${spaceId}/delete-post/${post.id}`,
+            {
+               headers: {
+                  Authorization: `Bearer ${token}`,
+               },
+            }
+         );
+         console.log(res.data);
+
+         toast.success(`${post.title} deleted successfully`, {
+            icon: "🚮",
+         });
+         fetchPosts();
+      } catch (err) {
+         console.error(err);
+
+         if (axios.isAxiosError(err)) {
+            if (err.response) {
+               return toast.error(err.response.data.error.message);
+            }
+         }
+         toast.error(`Failed to delete ${post.title}`);
+      }
+   };
+
    const fetchPosts = async () => {
       setLoading(true);
 
@@ -144,7 +172,11 @@ const SpaceController = () => {
       <div className="w-full p-10 overflow-y-scroll">
          <div className="flex items-center justify-start flex-wrap gap-5">
             {posts.map((post) => (
-               <PostCard key={post.id} post={post} />
+               <PostCard
+                  key={post.id}
+                  post={post}
+                  handleDeletePost={handleDeletePost}
+               />
             ))}
          </div>
 
