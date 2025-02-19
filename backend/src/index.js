@@ -12,6 +12,8 @@ import { createPost } from "./controllers/containerManager/createPost.js";
 import { updatePublicStatusOfContainer } from "./controllers/userManager/updatePublicStatusOfContainer.js";
 import { deleteContainer } from "./controllers/userManager/deleteContainer.js";
 import { deletePost } from "./controllers/containerManager/deletePost.js";
+import { renameContainer } from "./controllers/userManager/renameContainer.js";
+import { renamePost } from "./controllers/containerManager/renamePost.js";
 
 const app = express();
 const apiRouter = express.Router();
@@ -40,11 +42,21 @@ apiRouter.get("/containers", authMiddleware, getAllContainers);
 // TODO create container
 apiRouter.post("/create-container", authMiddleware, createContainer);
 
+// TODO rename container
+apiRouter.post(
+   "/:containerId/rename-container",
+   authMiddleware,
+   renameContainer
+);
+
 // TODO get all posts of container (id)
 apiRouter.get("/:containerId/posts", authMiddleware, getAllPosts);
 
 // TODO create post
 apiRouter.post("/:containerId/create-post", authMiddleware, createPost);
+
+// TODO rename post
+apiRouter.post("/:containerId/rename-post/:postId", authMiddleware, renamePost);
 
 // TODO delete container
 apiRouter.delete(

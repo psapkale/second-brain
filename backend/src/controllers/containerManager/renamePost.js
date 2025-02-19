@@ -1,13 +1,30 @@
 import { prisma } from "../../db/prisma.js";
 
-export const deletePost = async (req, res) => {
+export const renamePost = async (req, res) => {
    const { containerId, postId } = req.params;
+   const { title } = req.body;
 
    if (!containerId || !postId) {
       throw new Error("container id or post id not provided in the url");
    }
 
+   if (title?.length <= 2) {
+      return res.status(411).json({
+         message: "Title is too short",
+      });
+   }
+
    try {
+      let container = await prisma.container.findUnique({
+         where: {
+            id: containerId,
+         },
+      });
+
+      if (!container) {
+         throw new Error("Container not found");
+      }
+
       let post = await prisma.post.findUnique({
          where: {
             id: postId,
@@ -19,26 +36,28 @@ export const deletePost = async (req, res) => {
          throw new Error("Post not found");
       }
 
-      post = await prisma.post.delete({
+      post = await prisma.post.update({
          where: {
             id: postId,
-            parentContainerId: containerId,
+         },
+         data: {
+            title,
          },
       });
 
       if (!post) {
-         throw new Error("Failed to delete  post");
+         throw new Error("Failed to rename container");
       }
 
       res.status(200).json({
-         message: "Post deleted successfully",
+         message: "Post renamed successfully",
          post,
       });
    } catch (err) {
       console.log(err);
 
       res.status(500).json({
-         message: "Error occured while deleting post",
+         message: "Error occured while renaming post",
          error: {
             err,
             message: err.message,
