@@ -1,5 +1,5 @@
 import { PostData } from "@/types";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import {
    DropdownMenu,
    DropdownMenuContent,
@@ -7,6 +7,7 @@ import {
    DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Ellipsis, Trash } from "lucide-react";
+import { useTheme } from "@/context/themeContext";
 
 interface PostCardProps {
    post: PostData;
@@ -29,7 +30,8 @@ declare global {
 }
 
 const PostCard = ({ post, handleDeletePost }: PostCardProps) => {
-   const isDarkMode = useRef(true);
+   const { theme } = useTheme();
+   const isDarkMode = theme === "dark";
 
    useEffect(() => {
       const addTwitterTheme = () => {
@@ -78,7 +80,7 @@ const PostCard = ({ post, handleDeletePost }: PostCardProps) => {
       const addInstagramTheme = () => {
          const instaEmbeds = document.querySelectorAll(".instagram-media");
          instaEmbeds.forEach((embed) => {
-            embed.classList.toggle("data-theme", isDarkMode.current);
+            embed.classList.toggle("data-theme", isDarkMode);
          });
       };
 
@@ -121,7 +123,7 @@ const PostCard = ({ post, handleDeletePost }: PostCardProps) => {
 
       return (
          <div
-            className="mt-4 w-full h-[300px] dark:bg-[#1A1E24] bg-gray-50 overflow-y-scroll custom-scrollbar"
+            className="mt-4 w-full h-[300px] overflow-y-scroll custom-scrollbar"
             style={{
                borderRadius: "8px",
                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
@@ -129,7 +131,7 @@ const PostCard = ({ post, handleDeletePost }: PostCardProps) => {
          >
             <blockquote
                className="twitter-tweet w-full"
-               data-theme={isDarkMode ? "dark" : "light"}
+               data-theme={theme}
                style={{
                   maxWidth: "100%",
                   boxSizing: "border-box",
@@ -220,24 +222,41 @@ const PostCard = ({ post, handleDeletePost }: PostCardProps) => {
    };
 
    return (
-      <div style={{ width: post.contentType === "YOUTUBE" ? 600 : 400 }}>
-         <div className="p-4 h-auto font-poppins dark:bg-[#1A1E24] dark:border-gray-800 border-gray-200 border shadow-md bg-white rounded-lg w-full transition duration-200 hover:scale-[1.01] hover:shadow-lg dark:hover:bg-gray-900 hover:bg-gray-100">
+      <div
+         style={{
+            width: post.contentType === "YOUTUBE" ? 600 : 400,
+         }}
+      >
+         <div
+            className={`${
+               isDarkMode
+                  ? "bg-[#0e1114] text-gray-200 border-gray-800 hover:bg-gray-900"
+                  : "bg-white text-gray-800"
+            } p-4 h-auto font-poppins border-gray-200 border shadow-md rounded-lg w-full transition duration-200 hover:scale-[1.01] hover:shadow-lg hover:bg-gray-100`}
+         >
             <div className="flex justify-between">
                <div className="w-full mx-3 flex items-center justify-between">
                   <div className="flex items-center">
                      <div className="pr-2">{renderIcon()}</div>
-                     <p className="text-[1rem] dark:text-gray-200 text-gray-800 capitalize">
-                        {post.title}
-                     </p>
+                     <p className="text-[1rem] capitalize">{post.title}</p>
                   </div>
                   <span className="self-end">
                      <DropdownMenu>
                         <DropdownMenuTrigger>
                            <Ellipsis className="w-4 h-4" />
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                           <DropdownMenuItem>Rename</DropdownMenuItem>
+                        <DropdownMenuContent
+                           className={`${
+                              isDarkMode
+                                 ? "bg-black text-white border-slate-800"
+                                 : ""
+                           }`}
+                        >
+                           <DropdownMenuItem className="cursor-pointer">
+                              Rename
+                           </DropdownMenuItem>
                            <DropdownMenuItem
+                              className="cursor-pointer"
                               onClick={() => handleDeletePost(post)}
                            >
                               <Trash className="w-3 h-3 text-red-500" />

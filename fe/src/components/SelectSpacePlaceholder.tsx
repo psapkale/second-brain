@@ -1,11 +1,23 @@
+import { useTheme } from "@/context/themeContext";
+
 const SelectSpacePlaceholder = () => {
-   // "https://pbs.twimg.com/media/GhapST9aEAAr2Jv?format=jpg&name=large",
+   const { theme } = useTheme();
+   const isDarkMode = theme === "dark";
 
    return (
-      <div className="w-full flex items-center justify-center gap-3 flex-col">
+      <div
+         className="w-full flex items-center justify-center gap-3 flex-col"
+         style={{
+            backgroundColor: isDarkMode ? "black" : "",
+         }}
+      >
          <img
             // src="https://i.pinimg.com/736x/ed/7e/64/ed7e641be30d02a53cfc44272b84f5f4.jpg"
-            src="/sleeping-duck.png"
+            src={
+               isDarkMode
+                  ? "https://pbs.twimg.com/media/GhapST9aEAAr2Jv?format=jpg&name=large"
+                  : "/sleeping-duck.png"
+            }
             alt="space-placeholder"
             className="w-[20vw] h-[42vh]"
          />

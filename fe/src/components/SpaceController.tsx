@@ -17,11 +17,16 @@ import {
 } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { Skeleton } from "primereact/skeleton";
+import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
 import PostCard from "./PostCard";
+import { useTheme } from "@/context/themeContext";
 
 const SpaceController = () => {
    const { spaceId } = useParams();
    const token = useUser().getToken();
+   const { theme } = useTheme();
+   const isDarkMode = theme === "dark";
    const [posts, setPosts] = useState<PostData[]>([]);
    const [title, setTitle] = useState("");
    const [isOpen, setIsOpen] = useState(false); // for modal
@@ -165,11 +170,42 @@ const SpaceController = () => {
    }, [spaceId]);
 
    if (loading) {
-      return <div className="w-full">be hold..</div>;
+      return (
+         <div
+            className={`${
+               isDarkMode ? "bg-black text-white" : ""
+            } w-full p-10 h-screen flex flex-wrap items-center justify-start gap-4`}
+         >
+            <Skeleton
+               width="400px"
+               height="300px"
+               className={`${isDarkMode ? "bg-[#0e1114]" : ""}`}
+            />
+            <Skeleton
+               width="600px"
+               height="300px"
+               className={`${isDarkMode ? "bg-[#0e1114]" : ""}`}
+            />
+            <Skeleton
+               width="600px"
+               height="300px"
+               className={`${isDarkMode ? "bg-[#0e1114]" : ""}`}
+            />
+            <Skeleton
+               width="400px"
+               height="300px"
+               className={`${isDarkMode ? "bg-[#0e1114]" : ""}`}
+            />
+         </div>
+      );
    }
 
    return (
-      <div className="w-full p-10 overflow-y-scroll">
+      <div
+         className={`${
+            isDarkMode ? "bg-black" : ""
+         } w-full p-10 overflow-y-scroll`}
+      >
          <div className="flex items-center justify-start flex-wrap gap-5">
             {posts.map((post) => (
                <PostCard
@@ -190,7 +226,14 @@ const SpaceController = () => {
                   <PlusCircle />
                </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent
+               className="sm:max-w-[425px]"
+               style={{
+                  color: isDarkMode ? "white" : "",
+                  backgroundColor: isDarkMode ? "black" : "",
+                  border: isDarkMode ? "1px solid #272727" : "",
+               }}
+            >
                <DialogHeader>
                   <DialogTitle>Add post</DialogTitle>
                   <DialogDescription>Add post in the space</DialogDescription>
@@ -205,6 +248,9 @@ const SpaceController = () => {
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         className="col-span-3"
+                        style={{
+                           border: isDarkMode ? "1px solid #272727" : "",
+                        }}
                      />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
@@ -216,6 +262,9 @@ const SpaceController = () => {
                         value={link}
                         onChange={(e) => setLink(e.target.value)}
                         className="col-span-3"
+                        style={{
+                           border: isDarkMode ? "1px solid #272727" : "",
+                        }}
                      />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
@@ -233,6 +282,12 @@ const SpaceController = () => {
                                     ? "opacity-100"
                                     : "opacity-50"
                               } hover:opacity-100 object-contain`}
+                              style={{
+                                 backgroundColor:
+                                    isDarkMode && plat === "TWITTER"
+                                       ? "white"
+                                       : "",
+                              }}
                               onClick={() => setContentType(plat)}
                            />
                         ))}

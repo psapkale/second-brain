@@ -9,7 +9,7 @@ const Layout = () => {
    return (
       <div className="w-full">
          {/* <Navigation /> */}
-         <div className="h-screen flex gap-2">
+         <div className="h-screen flex">
             <Sidebar />
             {location.pathname.endsWith("spaces") ||
             location.pathname.endsWith("spaces/") ? (

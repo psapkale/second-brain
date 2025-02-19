@@ -6,6 +6,7 @@ import NotFound from "./pages/not-found/NotFound";
 import AuthPage from "./pages/auth";
 import Layout from "./components/Layout";
 import SpaceController from "./components/SpaceController";
+import { ThemeProvider, useTheme } from "./context/themeContext";
 
 function App() {
    const router = createBrowserRouter([
@@ -32,12 +33,13 @@ function App() {
          element: <NotFound />,
       },
    ]);
+   const { theme } = useTheme();
 
    return (
-      <>
-         <Toaster position="bottom-center" />
+      <ThemeProvider>
+         <Toaster position="bottom-center" theme={theme} />
          <RouterProvider router={router} />
-      </>
+      </ThemeProvider>
    );
 }
 
