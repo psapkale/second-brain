@@ -1,8 +1,17 @@
 import { useUser } from "@/hooks/useUser";
 import { SpaceData, UserData } from "@/types";
 import axios from "axios";
-import { Ellipsis, LogOut, Moon, PlusCircle, Sun, Trash } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+   Check,
+   Ellipsis,
+   LogOut,
+   Moon,
+   Pencil,
+   PlusCircle,
+   Sun,
+   Trash,
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Skeleton } from "primereact/skeleton";
@@ -38,6 +47,8 @@ const Sidebar = () => {
    const [title, setTitle] = useState("");
    const [loading, setLoading] = useState<boolean>(true);
    const [isOpen, setIsOpen] = useState(false);
+   const inputRef = useRef<HTMLInputElement>(null);
+   const [isRenaming, setIsRenaming] = useState(false);
 
    const handleSignOut = async () => {
       try {
@@ -51,6 +62,42 @@ const Sidebar = () => {
          console.log(err);
 
          toast.error("Failed to sign out");
+      }
+   };
+
+   const handleRenameSpace = async () => {
+      if (inputRef.current && inputRef.current.value.length <= 2) {
+         return toast.error("Title is too short");
+      }
+
+      try {
+         const res = await axios.post(
+            `http://localhost:8080/api/v1/${spaceId}/rename-container`,
+            {
+               title: inputRef.current?.value,
+            },
+            {
+               headers: {
+                  Authorization: `Bearer ${token}`,
+               },
+            }
+         );
+
+         console.log(res.data);
+
+         toast.success("Space renamed successfully");
+         fetchContainers();
+      } catch (err) {
+         console.error(err);
+
+         if (axios.isAxiosError(err)) {
+            if (err.response) {
+               return toast.error(err.response.data.error.message);
+            }
+         }
+         toast.error("Failed to rename space");
+      } finally {
+         setIsRenaming(false);
       }
    };
 
@@ -245,38 +292,64 @@ const Sidebar = () => {
                               : "",
                      }}
                   >
-                     <span className="capitalize">{space.title}</span>
-                     <DropdownMenu>
-                        <DropdownMenuTrigger>
-                           <Ellipsis
-                              className="w-4 h-4"
-                              style={{
-                                 opacity: spaceId === space.id ? 1 : 0,
-                              }}
+                     {isRenaming && space.id === spaceId ? (
+                        <div className="flex items-center gap-2">
+                           <Input
+                              type="text"
+                              ref={inputRef}
+                              placeholder={space.title}
+                              className={`border ${
+                                 isDarkMode
+                                    ? "border-gray-800"
+                                    : "border-gray-200"
+                              }`}
                            />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                           className={`${
-                              isDarkMode
-                                 ? "bg-black text-white border-slate-800"
-                                 : ""
-                           }`}
-                        >
-                           <DropdownMenuItem className="cursor-pointer">
-                              {space.isPublic ? "Private" : "Public"}
-                           </DropdownMenuItem>
-                           <DropdownMenuItem className="cursor-pointer">
-                              Rename
-                           </DropdownMenuItem>
-                           <DropdownMenuItem
-                              className="cursor-pointer"
-                              onClick={() => handleDeleteSpace(space.title)}
+                        </div>
+                     ) : (
+                        <span className="capitalize">{space.title}</span>
+                     )}
+                     {isRenaming && space.id === spaceId ? (
+                        <Check
+                           className="w-5 h-5 cursor-pointer"
+                           onClick={handleRenameSpace}
+                        />
+                     ) : (
+                        <DropdownMenu>
+                           <DropdownMenuTrigger>
+                              <Ellipsis
+                                 className="w-4 h-4"
+                                 style={{
+                                    opacity: spaceId === space.id ? 1 : 0,
+                                 }}
+                              />
+                           </DropdownMenuTrigger>
+                           <DropdownMenuContent
+                              className={`${
+                                 isDarkMode
+                                    ? "bg-black text-white border-slate-800"
+                                    : ""
+                              }`}
                            >
-                              <Trash className="w-3 h-3 text-red-500" />
-                              <span>Delete</span>
-                           </DropdownMenuItem>
-                        </DropdownMenuContent>
-                     </DropdownMenu>
+                              <DropdownMenuItem className="cursor-pointer">
+                                 {space.isPublic ? "Private" : "Public"}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                 className="cursor-pointer"
+                                 onClick={() => setIsRenaming(true)}
+                              >
+                                 <Pencil className="w-3 h-3" />
+                                 <span>Rename</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                 className="cursor-pointer"
+                                 onClick={() => handleDeleteSpace(space.title)}
+                              >
+                                 <Trash className="w-3 h-3 text-red-500" />
+                                 <span>Delete</span>
+                              </DropdownMenuItem>
+                           </DropdownMenuContent>
+                        </DropdownMenu>
+                     )}
                   </Link>
                ))}
             </div>

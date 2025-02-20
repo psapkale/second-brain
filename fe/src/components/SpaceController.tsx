@@ -137,6 +137,40 @@ const SpaceController = () => {
       }
    };
 
+   const handleRenamePost = async (postId: string, title: string) => {
+      if (title.length <= 2) {
+         return toast.error("Title is too short");
+      }
+
+      try {
+         const res = await axios.post(
+            `http://localhost:8080/api/v1/${spaceId}/rename-post/${postId}`,
+            {
+               title,
+            },
+            {
+               headers: {
+                  Authorization: `Bearer ${token}`,
+               },
+            }
+         );
+
+         console.log(res.data);
+
+         toast.success("Post renamed successfully");
+         fetchPosts();
+      } catch (err) {
+         console.error(err);
+
+         if (axios.isAxiosError(err)) {
+            if (err.response) {
+               return toast.error(err.response.data.error.message);
+            }
+         }
+         toast.error("Failed to rename post");
+      }
+   };
+
    const fetchPosts = async () => {
       setLoading(true);
 
@@ -212,6 +246,7 @@ const SpaceController = () => {
                   key={post.id}
                   post={post}
                   handleDeletePost={handleDeletePost}
+                  handleRenamePost={handleRenamePost}
                />
             ))}
          </div>

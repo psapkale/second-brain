@@ -1,17 +1,19 @@
 import { PostData } from "@/types";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
    DropdownMenu,
    DropdownMenuContent,
    DropdownMenuItem,
    DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Ellipsis, Trash } from "lucide-react";
+import { Check, Ellipsis, Pencil, Trash } from "lucide-react";
 import { useTheme } from "@/context/themeContext";
+import { Input } from "./ui/input";
 
 interface PostCardProps {
    post: PostData;
    handleDeletePost: (post: PostData) => void;
+   handleRenamePost: (postId: string, title: string) => void;
 }
 
 declare global {
@@ -29,9 +31,22 @@ declare global {
    }
 }
 
-const PostCard = ({ post, handleDeletePost }: PostCardProps) => {
+const PostCard = ({
+   post,
+   handleDeletePost,
+   handleRenamePost,
+}: PostCardProps) => {
    const { theme } = useTheme();
    const isDarkMode = theme === "dark";
+   const inputRef = useRef<HTMLInputElement>(null);
+   const [isRenaming, setIsRenaming] = useState(false);
+
+   const handleRename = () => {
+      if (inputRef.current) {
+         handleRenamePost(post.id, inputRef.current.value);
+         setIsRenaming(false);
+      }
+   };
 
    useEffect(() => {
       const addTwitterTheme = () => {
@@ -238,32 +253,54 @@ const PostCard = ({ post, handleDeletePost }: PostCardProps) => {
                <div className="w-full mx-3 flex items-center justify-between">
                   <div className="flex items-center">
                      <div className="pr-2">{renderIcon()}</div>
-                     <p className="text-[1rem] capitalize">{post.title}</p>
+                     {isRenaming ? (
+                        <Input
+                           type="text"
+                           ref={inputRef}
+                           placeholder={post.title}
+                           className={`border ${
+                              isDarkMode ? "border-gray-800" : "border-gray-200"
+                           }`}
+                        />
+                     ) : (
+                        <p className="text-[1rem] capitalize">{post.title}</p>
+                     )}
                   </div>
                   <span className="self-end">
-                     <DropdownMenu>
-                        <DropdownMenuTrigger>
-                           <Ellipsis className="w-4 h-4" />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                           className={`${
-                              isDarkMode
-                                 ? "bg-black text-white border-slate-800"
-                                 : ""
-                           }`}
-                        >
-                           <DropdownMenuItem className="cursor-pointer">
-                              Rename
-                           </DropdownMenuItem>
-                           <DropdownMenuItem
-                              className="cursor-pointer"
-                              onClick={() => handleDeletePost(post)}
+                     {isRenaming ? (
+                        <Check
+                           className="w-5 h-5 cursor-pointer"
+                           onClick={handleRename}
+                        />
+                     ) : (
+                        <DropdownMenu>
+                           <DropdownMenuTrigger>
+                              <Ellipsis className="w-4 h-4" />
+                           </DropdownMenuTrigger>
+                           <DropdownMenuContent
+                              className={`${
+                                 isDarkMode
+                                    ? "bg-black text-white border-slate-800"
+                                    : ""
+                              }`}
                            >
-                              <Trash className="w-3 h-3 text-red-500" />
-                              <span>Delete</span>
-                           </DropdownMenuItem>
-                        </DropdownMenuContent>
-                     </DropdownMenu>
+                              <DropdownMenuItem
+                                 className="cursor-pointer"
+                                 onClick={() => setIsRenaming(!isRenaming)}
+                              >
+                                 <Pencil className="w-3 h-3" />
+                                 <span>Rename</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                 className="cursor-pointer"
+                                 onClick={() => handleDeletePost(post)}
+                              >
+                                 <Trash className="w-3 h-3 text-red-500" />
+                                 <span>Delete</span>
+                              </DropdownMenuItem>
+                           </DropdownMenuContent>
+                        </DropdownMenu>
+                     )}
                   </span>
                </div>
             </div>
