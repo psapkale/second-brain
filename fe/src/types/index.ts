@@ -10,8 +10,10 @@ export interface SpaceData {
    id: string;
    title: string;
    isPublic: boolean;
+   creator: UserData;
    creatorId: string;
-   createdAt: string;
+   posts: PostData[];
+   createdAt: Date;
 }
 
 export type ContentType = "TWITTER" | "YOUTUBE" | "INSTAGRAM";
@@ -21,4 +23,5 @@ export interface PostData {
    title: string;
    link: string;
    contentType: ContentType;
+   createdAt: Date;
 }

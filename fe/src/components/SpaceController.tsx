@@ -245,6 +245,7 @@ const SpaceController = () => {
                <PostCard
                   key={post.id}
                   post={post}
+                  shareMode={false}
                   handleDeletePost={handleDeletePost}
                   handleRenamePost={handleRenamePost}
                />

@@ -21,9 +21,12 @@ export default function AuthPage() {
          const res = await signInWithPopup(auth, googleProvider);
          const idToken = await res.user.getIdToken();
 
-         const data = await axios.post("http://localhost:8080/api/v1/signin", {
-            token: idToken,
-         });
+         const data = await axios.post(
+            `${import.meta.env.VITE_BE_URL}/api/v1/signin`,
+            {
+               token: idToken,
+            }
+         );
          const { message, token, user } = data.data;
 
          setUser({ ...user, token, createdAt: _.now() });
@@ -50,9 +53,12 @@ export default function AuthPage() {
          const res = await signInWithPopup(auth, googleProvider);
          const idToken = await res.user.getIdToken();
 
-         const data = await axios.post("http://localhost:8080/api/v1/login", {
-            token: idToken,
-         });
+         const data = await axios.post(
+            `${import.meta.env.VITE_BE_URL}/api/v1/login`,
+            {
+               token: idToken,
+            }
+         );
          const { message, token, user } = data.data;
 
          setUser({ ...user, token, createdAt: _.now() });

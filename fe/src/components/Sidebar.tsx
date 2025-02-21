@@ -6,6 +6,7 @@ import {
    Ellipsis,
    Globe,
    GlobeLock,
+   Link2,
    LogOut,
    Moon,
    Pencil,
@@ -74,7 +75,7 @@ const Sidebar = () => {
 
       try {
          const res = await axios.post(
-            `http://localhost:8080/api/v1/${spaceId}/rename-container`,
+            `${import.meta.env.VITE_BE_URL}/api/v1/${spaceId}/rename-container`,
             {
                title: inputRef.current?.value,
             },
@@ -110,7 +111,7 @@ const Sidebar = () => {
 
       try {
          const res = await axios.post(
-            "http://localhost:8080/api/v1/create-container",
+            `${import.meta.env.VITE_BE_URL}/api/v1/create-container`,
             {
                title: title,
             },
@@ -143,7 +144,7 @@ const Sidebar = () => {
    const handleDeleteSpace = async (spaceTitle: string) => {
       try {
          const res = await axios.delete(
-            `http://localhost:8080/api/v1/${spaceId}/delete-container`,
+            `${import.meta.env.VITE_BE_URL}/api/v1/${spaceId}/delete-container`,
             {
                headers: {
                   Authorization: `Bearer ${token}`,
@@ -172,7 +173,7 @@ const Sidebar = () => {
    const handleChangeVisibility = async (visible: boolean) => {
       try {
          const res = await axios.post(
-            `http://localhost:8080/api/v1/${spaceId}/toPublic`,
+            `${import.meta.env.VITE_BE_URL}/api/v1/${spaceId}/toPublic`,
             {
                toPublic: visible,
             },
@@ -202,12 +203,26 @@ const Sidebar = () => {
       }
    };
 
+   const handleCopyShareLink = async (id: string) => {
+      try {
+         const link = `${import.meta.env.VITE_FE_URL}/s/${id}`;
+         await navigator.clipboard.writeText(link);
+
+         toast.success(`Link copied ${link}`, {
+            icon: "🎉",
+         });
+      } catch (err) {
+         console.log(err);
+         toast.error("Failed to copy");
+      }
+   };
+
    const fetchContainers = async () => {
       setLoading(true);
 
       try {
          const res = await axios.get(
-            "http://localhost:8080/api/v1/containers",
+            `${import.meta.env.VITE_BE_URL}/api/v1/containers`,
             {
                headers: {
                   Authorization: `Beared ${token}`,
@@ -309,96 +324,115 @@ const Sidebar = () => {
             </div>
          ) : (
             <div className="flex gap-2 flex-col">
-               {spaces.map((space) => (
-                  <Link
-                     key={space.id}
-                     to={`/spaces/${space.id}`}
-                     className={`py-1 px-2 flex items-center justify-between rounded-sm ${
-                        isDarkMode
-                           ? "hover:bg-[#171717] text-white"
-                           : "hover:bg-slate-100"
-                     }`}
-                     style={{
-                        backgroundColor:
-                           spaceId === space.id
-                              ? isDarkMode
-                                 ? "#171717"
-                                 : "#f1f5f9"
-                              : "",
-                     }}
-                  >
-                     {isRenaming && space.id === spaceId ? (
-                        <div className="flex items-center gap-2">
-                           <Input
-                              type="text"
-                              ref={inputRef}
-                              placeholder={space.title}
-                              className={`border ${
-                                 isDarkMode
-                                    ? "border-gray-800"
-                                    : "border-gray-200"
-                              }`}
-                           />
-                        </div>
-                     ) : (
-                        <span className="capitalize">{space.title}</span>
-                     )}
-                     {isRenaming && space.id === spaceId ? (
-                        <Check
-                           className="w-5 h-5 cursor-pointer"
-                           onClick={handleRenameSpace}
-                        />
-                     ) : (
-                        <DropdownMenu>
-                           <DropdownMenuTrigger>
-                              <Ellipsis
-                                 className="w-4 h-4"
-                                 style={{
-                                    opacity: spaceId === space.id ? 1 : 0,
-                                 }}
+               {spaces
+                  .sort(
+                     (a, b) =>
+                        new Date(a.createdAt).getTime() -
+                        new Date(b.createdAt).getTime()
+                  )
+                  .map((space) => (
+                     <Link
+                        key={space.id}
+                        to={`/spaces/${space.id}`}
+                        className={`py-1 px-2 flex items-center justify-between rounded-sm ${
+                           isDarkMode
+                              ? "hover:bg-[#171717] text-white"
+                              : "hover:bg-slate-100"
+                        }`}
+                        style={{
+                           backgroundColor:
+                              spaceId === space.id
+                                 ? isDarkMode
+                                    ? "#171717"
+                                    : "#f1f5f9"
+                                 : "",
+                        }}
+                     >
+                        {isRenaming && space.id === spaceId ? (
+                           <div className="flex items-center gap-2">
+                              <Input
+                                 type="text"
+                                 ref={inputRef}
+                                 placeholder={space.title}
+                                 className={`border ${
+                                    isDarkMode
+                                       ? "border-gray-800"
+                                       : "border-gray-200"
+                                 }`}
                               />
-                           </DropdownMenuTrigger>
-                           <DropdownMenuContent
-                              className={`${
-                                 isDarkMode
-                                    ? "bg-black text-white border-slate-800"
-                                    : ""
-                              }`}
-                           >
-                              <DropdownMenuItem
-                                 className="cursor-pointer"
-                                 onClick={() =>
-                                    handleChangeVisibility(!space.isPublic)
-                                 }
+                           </div>
+                        ) : (
+                           <span className="capitalize">{space.title}</span>
+                        )}
+                        {isRenaming && space.id === spaceId ? (
+                           <Check
+                              className="w-5 h-5 cursor-pointer"
+                              onClick={handleRenameSpace}
+                           />
+                        ) : (
+                           <DropdownMenu>
+                              <DropdownMenuTrigger>
+                                 <Ellipsis
+                                    className="w-4 h-4"
+                                    style={{
+                                       opacity: spaceId === space.id ? 1 : 0,
+                                    }}
+                                 />
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent
+                                 className={`${
+                                    isDarkMode
+                                       ? "bg-black text-white border-slate-800"
+                                       : ""
+                                 }`}
                               >
-                                 {space.isPublic ? (
-                                    <GlobeLock className="w-3 h-3" />
-                                 ) : (
-                                    <Globe className="w-3 h-3" />
+                                 <DropdownMenuItem
+                                    className="cursor-pointer"
+                                    onClick={() =>
+                                       handleChangeVisibility(!space.isPublic)
+                                    }
+                                 >
+                                    {space.isPublic ? (
+                                       <GlobeLock className="w-3 h-3" />
+                                    ) : (
+                                       <Globe className="w-3 h-3" />
+                                    )}
+                                    <span>
+                                       {space.isPublic ? "Private" : "Public"}
+                                    </span>
+                                 </DropdownMenuItem>
+                                 {space.isPublic && (
+                                    <DropdownMenuItem
+                                       className="cursor-pointer"
+                                       onClick={() =>
+                                          handleCopyShareLink(space.id)
+                                       }
+                                    >
+                                       <Link2 className="w-3 h-3" />
+                                       <span>Share</span>
+                                    </DropdownMenuItem>
                                  )}
-                                 <span>
-                                    {space.isPublic ? "Private" : "Public"}
-                                 </span>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                 className="cursor-pointer"
-                                 onClick={() => setIsRenaming(true)}
-                              >
-                                 <Pencil className="w-3 h-3" />
-                                 <span>Rename</span>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                 className="cursor-pointer"
-                                 onClick={() => handleDeleteSpace(space.title)}
-                              >
-                                 <Trash className="w-3 h-3 text-red-500" />
-                                 <span>Delete</span>
-                              </DropdownMenuItem>
-                           </DropdownMenuContent>
-                        </DropdownMenu>
-                     )}
-                  </Link>
-               ))}
+                                 <DropdownMenuItem
+                                    className="cursor-pointer"
+                                    onClick={() => setIsRenaming(true)}
+                                 >
+                                    <Pencil className="w-3 h-3" />
+                                    <span>Rename</span>
+                                 </DropdownMenuItem>
+                                 <DropdownMenuItem
+                                    className="cursor-pointer"
+                                    onClick={() =>
+                                       handleDeleteSpace(space.title)
+                                    }
+                                 >
+                                    <Trash className="w-3 h-3 text-red-500" />
+                                    <span>Delete</span>
+                                 </DropdownMenuItem>
+                              </DropdownMenuContent>
+                           </DropdownMenu>
+                        )}
+                     </Link>
+                  ))}
             </div>
          )}
 
