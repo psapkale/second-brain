@@ -14,6 +14,7 @@ import { deleteContainer } from "./controllers/userManager/deleteContainer.js";
 import { deletePost } from "./controllers/containerManager/deletePost.js";
 import { renameContainer } from "./controllers/userManager/renameContainer.js";
 import { renamePost } from "./controllers/containerManager/renamePost.js";
+import { getSharedContainer } from "./controllers/userManager/getSharedContainer.js";
 
 const app = express();
 const apiRouter = express.Router();
@@ -38,6 +39,9 @@ apiRouter.post("/login", login);
 
 // TODO get all containers (id)
 apiRouter.get("/containers", authMiddleware, getAllContainers);
+
+// TODO get container
+apiRouter.get("/:containerId", authMiddleware, getSharedContainer);
 
 // TODO create container
 apiRouter.post("/create-container", authMiddleware, createContainer);
