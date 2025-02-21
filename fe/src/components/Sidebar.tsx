@@ -4,6 +4,8 @@ import axios from "axios";
 import {
    Check,
    Ellipsis,
+   Globe,
+   GlobeLock,
    LogOut,
    Moon,
    Pencil,
@@ -164,6 +166,39 @@ const Sidebar = () => {
             }
          }
          toast.error(`Failed to delete ${spaceTitle}`);
+      }
+   };
+
+   const handleChangeVisibility = async (visible: boolean) => {
+      try {
+         const res = await axios.post(
+            `http://localhost:8080/api/v1/${spaceId}/toPublic`,
+            {
+               toPublic: visible,
+            },
+            {
+               headers: {
+                  Authorization: `Bearer ${token}`,
+               },
+            }
+         );
+
+         console.log(res.data);
+         toast.success(
+            `${res.data.updatedContainer.title} is now ${
+               res.data.updatedContainer.isPublic ? "public" : "private"
+            }`
+         );
+         fetchContainers();
+      } catch (err) {
+         console.error(err);
+
+         if (axios.isAxiosError(err)) {
+            if (err.response) {
+               return toast.error(err.response.data.error.message);
+            }
+         }
+         toast.error("Failed to change visibilty");
       }
    };
 
@@ -330,8 +365,20 @@ const Sidebar = () => {
                                     : ""
                               }`}
                            >
-                              <DropdownMenuItem className="cursor-pointer">
-                                 {space.isPublic ? "Private" : "Public"}
+                              <DropdownMenuItem
+                                 className="cursor-pointer"
+                                 onClick={() =>
+                                    handleChangeVisibility(!space.isPublic)
+                                 }
+                              >
+                                 {space.isPublic ? (
+                                    <GlobeLock className="w-3 h-3" />
+                                 ) : (
+                                    <Globe className="w-3 h-3" />
+                                 )}
+                                 <span>
+                                    {space.isPublic ? "Private" : "Public"}
+                                 </span>
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                  className="cursor-pointer"

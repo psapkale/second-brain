@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
-import Navigation from "./Navigation";
-import Sidebar from "./Sidebar";
-import SelectSpacePlaceholder from "./SelectSpacePlaceholder";
+import Navigation from "../../components/Navigation";
+import Sidebar from "../../components/Sidebar";
+import SelectSpacePlaceholder from "../../components/SelectSpacePlaceholder";
 
 const Layout = () => {
    const location = useLocation();

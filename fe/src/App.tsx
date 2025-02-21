@@ -4,9 +4,10 @@ import { Toaster } from "sonner";
 import LandingPage from "./pages/routes/LandingPage";
 import NotFound from "./pages/not-found/NotFound";
 import AuthPage from "./pages/auth";
-import Layout from "./components/Layout";
+import Layout from "./pages/routes/Layout";
 import SpaceController from "./components/SpaceController";
 import { ThemeProvider, useTheme } from "./context/themeContext";
+import SharedSpace from "./pages/routes/SharedSpace";
 
 function App() {
    const router = createBrowserRouter([
@@ -27,6 +28,10 @@ function App() {
                element: <SpaceController />,
             },
          ],
+      },
+      {
+         path: "/s/:spaceId",
+         element: <SharedSpace />,
       },
       {
          path: "*",
