@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run prisma-generate",
     "postinstall": "prisma generate",
-    "watch": "nodemon -r dotenv/config ./src/index.js",
-    "start": "node -r dotenv/config ./src/index.js",
+    "watch": "nodemon ./src/index.js",
+    "start": "node ./src/index.js",
     "prisma-generate": "prisma generate"
   },
   "keywords": [],
