@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import admin from "firebase-admin";
 import { TokenZodSchema } from "../../schemaTypes/index.js";
 
@@ -15,7 +16,7 @@ export const authMiddleware = async (req, res, next) => {
 
    try {
       const token = tokenSchema.data;
-      const decodedToken = await admin.auth().verifyIdToken(token);
+      const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
       console.log(decodedToken);
 
       req.userData = decodedToken;
@@ -24,8 +25,8 @@ export const authMiddleware = async (req, res, next) => {
       console.log(err);
       let errMessage = err.message;
 
-      if (err.code === "auth/id-token-expired") {
-         errMessage = "Token expired login again";
+      if (err.name === "JsonWebTokenError") {
+         errMessage = "Invalid token";
       }
 
       res.status(500).json({

@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import { prisma } from "../../db/prisma.js";
 import admin from "firebase-admin";
 
@@ -50,6 +51,8 @@ export const signin = async (req, res) => {
 
       const spaceName = customSpaceName(newUser.name);
 
+      const newToken = jwt.sign({ email }, process.env.JWT_SECRET);
+
       const user = await prisma.user.create({
          data: {
             ...newUser,
@@ -74,7 +77,7 @@ export const signin = async (req, res) => {
                email: user.email,
                imgUrl: user.imgUrl,
             },
-            token,
+            token: newToken,
          });
       }
    } catch (err) {

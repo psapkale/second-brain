@@ -42,7 +42,7 @@ apiRouter.post("/login", login);
 apiRouter.get("/containers", authMiddleware, getAllContainers);
 
 // TODO get container
-apiRouter.get("/:containerId", authMiddleware, getSharedContainer);
+apiRouter.get("/:containerId", getSharedContainer);
 
 // TODO create container
 apiRouter.post("/create-container", authMiddleware, createContainer);

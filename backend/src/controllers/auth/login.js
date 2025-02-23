@@ -1,4 +1,5 @@
 import admin from "firebase-admin";
+import jwt from "jsonwebtoken";
 import { prisma } from "../../db/prisma.js";
 
 export const login = async (req, res) => {
@@ -24,6 +25,8 @@ export const login = async (req, res) => {
          throw new Error("User not found");
       }
 
+      const newToken = jwt.sign({ email }, process.env.JWT_SECRET);
+
       res.status(200).json({
          message: "Login successfully",
          user: {
@@ -31,7 +34,7 @@ export const login = async (req, res) => {
             email: user.email,
             imgUrl: user.imgUrl,
          },
-         token,
+         token: newToken,
       });
    } catch (err) {
       console.log(err);
