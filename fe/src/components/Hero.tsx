@@ -1,16 +1,16 @@
+import { BackgroundEffects } from "./BackgroundEffects";
+import { HeroHeader } from "./HeroHeader";
+import { Features } from "./Features";
 import { motion } from "framer-motion";
-import { Appbar } from "@/components/Appbar";
-import { BackgroundEffects } from "@/components/BackgroundEffects";
-import { HeroHeader } from "@/components/HeroHeader";
-import { HowItWorks } from "@/components/HowItWorks";
-import { Features } from "@/components/Features";
-import Footer from "@/components/Footer";
-import { ScrollIndicator } from "@/components/ScrollIndicator";
+import { ScrollIndicator } from "./ScrollIndicator";
+import { HowItWorks } from "./HowItWorks";
+import { Appbar } from "./Appbar";
+import Footer from "./Footer";
 
-export default function LandingPage() {
+export function Hero() {
    return (
       <div className="bg-black">
-         <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900 via-gray-900 to-black text-white overflow-hidden">
+         <div className="relative min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900 via-gray-900 to-black text-white overflow-hidden">
             <Appbar />
             <BackgroundEffects />
 

@@ -11,6 +11,7 @@ import {
    Moon,
    Pencil,
    PlusCircle,
+   Space,
    Sun,
    Trash,
 } from "lucide-react";
@@ -236,6 +237,14 @@ const Sidebar = () => {
 
          if (axios.isAxiosError(err)) {
             if (err.response) {
+               if (
+                  err.response.data.error.message ===
+                  "Token expired login again"
+               ) {
+                  toast.error(err.response.data.error.message);
+                  return setTimeout(() => navigate("/auth"), 200);
+               }
+
                return toast.error(err.response.data.error.message);
             }
          }
@@ -252,7 +261,7 @@ const Sidebar = () => {
    if (!user && !token) {
       toast.error("Please login to access Spaces");
 
-      navigate("/login");
+      navigate("/auth");
       return;
    }
 
@@ -264,7 +273,11 @@ const Sidebar = () => {
                : "bg-white border-slate-200"
          } border-r-2 w-[20%] h-full top-0 left-0 py-4 px-3 flex gap-5 flex-col`}
       >
-         <span className="text-4xl font-semibold">Second Brain</span>
+         <div className="text-4xl font-semibold flex gap-2 items-end">
+            <Space />
+            <span>Pro.</span>
+            <span>Space</span>
+         </div>
 
          {/* User info */}
          <div className="flex items-center gap-2">

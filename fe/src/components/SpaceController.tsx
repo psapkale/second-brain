@@ -80,7 +80,7 @@ const SpaceController = () => {
          }
 
          const res = await axios.post(
-            `http://localhost:8080/api/v1/${spaceId}/create-post`,
+            `${import.meta.env.VITE_BE_URL}/api/v1/${spaceId}/create-post`,
             {
                title,
                link,
@@ -112,7 +112,9 @@ const SpaceController = () => {
    const handleDeletePost = async (post: PostData) => {
       try {
          const res = await axios.delete(
-            `http://localhost:8080/api/v1/${spaceId}/delete-post/${post.id}`,
+            `${import.meta.env.VITE_BE_URL}/api/v1/${spaceId}/delete-post/${
+               post.id
+            }`,
             {
                headers: {
                   Authorization: `Bearer ${token}`,
@@ -144,7 +146,9 @@ const SpaceController = () => {
 
       try {
          const res = await axios.post(
-            `http://localhost:8080/api/v1/${spaceId}/rename-post/${postId}`,
+            `${
+               import.meta.env.VITE_BE_URL
+            }/api/v1/${spaceId}/rename-post/${postId}`,
             {
                title,
             },
@@ -176,7 +180,7 @@ const SpaceController = () => {
 
       try {
          const res = await axios.get(
-            `http://localhost:8080/api/v1/${spaceId}/posts`,
+            `${import.meta.env.VITE_BE_URL}/api/v1/${spaceId}/posts`,
             {
                headers: {
                   Authorization: `Bearer ${token}`,
@@ -241,15 +245,21 @@ const SpaceController = () => {
          } w-full p-10 overflow-y-scroll`}
       >
          <div className="flex items-center justify-start flex-wrap gap-5">
-            {posts.map((post) => (
-               <PostCard
-                  key={post.id}
-                  post={post}
-                  shareMode={false}
-                  handleDeletePost={handleDeletePost}
-                  handleRenamePost={handleRenamePost}
-               />
-            ))}
+            {posts
+               .sort(
+                  (a, b) =>
+                     new Date(a.createdAt).getTime() -
+                     new Date(b.createdAt).getTime()
+               )
+               .map((post) => (
+                  <PostCard
+                     key={post.id}
+                     post={post}
+                     shareMode={false}
+                     handleDeletePost={handleDeletePost}
+                     handleRenamePost={handleRenamePost}
+                  />
+               ))}
          </div>
 
          <Dialog open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>

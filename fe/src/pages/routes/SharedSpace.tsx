@@ -6,10 +6,10 @@ import axios from "axios";
 import { Skeleton } from "primereact/skeleton";
 import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Space, Sun } from "lucide-react";
 
 const SharedSpace = () => {
    const { spaceId } = useParams();
@@ -102,6 +102,15 @@ const SharedSpace = () => {
             isDarkMode ? "bg-black text-white" : ""
          } p-10 flex items-start gap-2 flex-col`}
       >
+         <Link
+            to={"/spaces"}
+            className="text-5xl font-semibold flex gap-2 items-end mb-10"
+         >
+            <Space />
+            <span>Project </span>
+            <span>Space</span>
+         </Link>
+
          {/* User Info */}
          <div className="w-full flex items-center justify-between">
             <div className="flex items-center gap-2">

@@ -21,12 +21,27 @@ const SelectSpacePlaceholder = () => {
             alt="space-placeholder"
             className="w-[20vw] h-[42vh]"
          />
-         <span className="text-slate-600 text-xs">
+         <span
+            className={`${
+               isDarkMode ? "text-slate-200" : "text-slate-800"
+            } text-lg`}
+         >
             There is no space to work!!
          </span>
-         <span className="text-slate-600 text-xs">
-            select from there 'left arrow svg'
-         </span>
+         <div
+            className={`${
+               isDarkMode ? "text-slate-300" : "text-slate-700"
+            } text-xs flex items-center gap-1`}
+         >
+            <img
+               src={isDarkMode ? "/arrow-dark.png" : "/arrow-light.png"}
+               alt="left arrow"
+               className={`w-16 h-16 ${
+                  isDarkMode ? "rotate-[140deg]" : "scale-y-[-1] rotate-45"
+               }`}
+            />
+            <span>select from there</span>
+         </div>
       </div>
    );
 };
