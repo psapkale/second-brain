@@ -39,7 +39,11 @@ import {
 } from "./ui/dropdown-menu";
 import { useTheme } from "@/context/themeContext";
 
-const Sidebar = () => {
+interface SidebarProps {
+   showSidebar: boolean;
+}
+
+const Sidebar = ({ showSidebar }: SidebarProps) => {
    const { getUser, getToken, removeUser } = useUser();
    const user: UserData = getUser();
    const token: string = getToken();
@@ -268,10 +272,12 @@ const Sidebar = () => {
    return (
       <div
          className={`${
+            showSidebar ? "translate-x-0" : "-translate-x-full hidden"
+         } ${
             isDarkMode
                ? "bg-black text-white border-[#171717]"
                : "bg-white border-slate-200"
-         } border-r-2 w-[20%] h-full top-0 left-0 py-4 px-3 flex gap-5 flex-col`}
+         } border-r-2 w-screen md:w-[30%] lg:w-[20%] h-full top-0 left-0 py-4 px-3 flex gap-5 flex-col `}
       >
          <div className="text-4xl font-semibold flex gap-2 items-end">
             <Space />

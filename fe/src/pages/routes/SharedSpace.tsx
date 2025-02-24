@@ -56,7 +56,7 @@ const SharedSpace = () => {
          <div
             className={`w-full ${
                isDarkMode ? "bg-black text-white" : ""
-            } p-10 flex items-start gap-5 flex-col`}
+            } p-3 md:p-10 flex items-start gap-5 flex-col`}
          >
             <Skeleton
                width="200px"
@@ -100,7 +100,7 @@ const SharedSpace = () => {
       <div
          className={`w-full min-h-screen ${
             isDarkMode ? "bg-black text-white" : ""
-         } p-10 flex items-start gap-2 flex-col`}
+         } p-3 md:p-10 flex items-start gap-2 flex-col`}
       >
          <Link
             to={"/spaces"}
@@ -140,7 +140,7 @@ const SharedSpace = () => {
          </div>
 
          {/* Post */}
-         <div className="flex items-center justify-start flex-wrap gap-5">
+         <div className="w-full flex items-center justify-start flex-wrap gap-5">
             {space?.posts.map((post) => (
                <PostCard key={post.id} post={post} shareMode={true} />
             ))}

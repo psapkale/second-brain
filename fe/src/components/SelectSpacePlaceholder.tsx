@@ -28,20 +28,6 @@ const SelectSpacePlaceholder = () => {
          >
             There is no space to work!!
          </span>
-         <div
-            className={`${
-               isDarkMode ? "text-slate-300" : "text-slate-700"
-            } text-xs flex items-center gap-1`}
-         >
-            <img
-               src={isDarkMode ? "/arrow-dark.png" : "/arrow-light.png"}
-               alt="left arrow"
-               className={`w-16 h-16 ${
-                  isDarkMode ? "rotate-[140deg]" : "scale-y-[-1] rotate-45"
-               }`}
-            />
-            <span>select from there</span>
-         </div>
       </div>
    );
 };

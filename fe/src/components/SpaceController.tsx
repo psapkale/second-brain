@@ -212,7 +212,7 @@ const SpaceController = () => {
          <div
             className={`${
                isDarkMode ? "bg-black text-white" : ""
-            } w-full p-10 h-screen flex flex-wrap items-center justify-start gap-4`}
+            } w-full p-3 md:p-10 h-screen flex flex-wrap items-center justify-start gap-4`}
          >
             <Skeleton
                width="400px"
@@ -242,7 +242,7 @@ const SpaceController = () => {
       <div
          className={`${
             isDarkMode ? "bg-black" : ""
-         } w-full p-10 overflow-y-scroll`}
+         } w-full p-3 md:p-10 overflow-y-scroll`}
       >
          <div className="flex items-center justify-start flex-wrap gap-5">
             {posts
