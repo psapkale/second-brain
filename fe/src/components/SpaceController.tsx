@@ -37,7 +37,7 @@ const SpaceController = () => {
       "INSTAGRAM",
    ]);
    const [contentType, setContentType] = useState<ContentType>("TWITTER");
-   const [loading, setLoading] = useState(true);
+   const [loading, setLoading] = useState(false);
 
    const validateLink = (link: string, contentType: ContentType) => {
       if (contentType === "TWITTER") {
@@ -204,7 +204,7 @@ const SpaceController = () => {
    };
 
    useEffect(() => {
-      fetchPosts();
+      // fetchPosts();
    }, [spaceId]);
 
    if (loading) {
@@ -244,23 +244,33 @@ const SpaceController = () => {
             isDarkMode ? "bg-black" : ""
          } w-full p-3 md:p-10 overflow-y-scroll`}
       >
-         <div className="flex items-center justify-start flex-wrap gap-5">
-            {posts
-               .sort(
-                  (a, b) =>
-                     new Date(a.createdAt).getTime() -
-                     new Date(b.createdAt).getTime()
-               )
-               .map((post) => (
-                  <PostCard
-                     key={post.id}
-                     post={post}
-                     shareMode={false}
-                     handleDeletePost={handleDeletePost}
-                     handleRenamePost={handleRenamePost}
-                  />
-               ))}
-         </div>
+         {!posts.length ? (
+            <div
+               className={`h-[86vh] flex items-center justify-center ${
+                  isDarkMode ? "text-white" : ""
+               }`}
+            >
+               <h1 className="text-lg">No post in this space.</h1>
+            </div>
+         ) : (
+            <div className="flex items-center justify-start flex-wrap gap-5">
+               {posts
+                  .sort(
+                     (a, b) =>
+                        new Date(a.createdAt).getTime() -
+                        new Date(b.createdAt).getTime()
+                  )
+                  .map((post) => (
+                     <PostCard
+                        key={post.id}
+                        post={post}
+                        shareMode={false}
+                        handleDeletePost={handleDeletePost}
+                        handleRenamePost={handleRenamePost}
+                     />
+                  ))}
+            </div>
+         )}
 
          <Dialog open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
             <DialogTrigger asChild>

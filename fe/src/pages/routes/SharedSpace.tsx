@@ -111,40 +111,60 @@ const SharedSpace = () => {
             <span>Space</span>
          </Link>
 
-         {/* User Info */}
-         <div className="w-full flex items-center justify-between">
-            <div className="flex items-center gap-2">
+         {!space ? (
+            <div className="w-full h-[70vh]  border-[#171717] flex items-center justify-center flex-col gap-5 rounded-xl">
                <img
-                  src={space?.creator.imgUrl}
-                  alt={space?.creator.name}
-                  className="w-8 h-8 rounded-full"
+                  src="/wakeup-duck.png"
+                  alt="no-public"
+                  className="w-[50vw] md:w-[20vw] h-[42vh]"
                />
-               <span className="text-lg fontsem">{space?.creator.name}</span>
+               <div>
+                  <h1 className="text-xl font-semibold">Space is not public</h1>
+                  <span className="text-sm">
+                     (ask the owner to make the 'space public)
+                  </span>
+               </div>
             </div>
+         ) : (
+            <>
+               {/* User Info */}
+               <div className="w-full flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                     <img
+                        src={space?.creator.imgUrl}
+                        alt={space?.creator.name}
+                        className="w-8 h-8 rounded-full"
+                     />
+                     <span className="text-lg fontsem">
+                        {space?.creator.name}
+                     </span>
+                  </div>
 
-            <Button
-               variant={isDarkMode ? "default" : "outline"}
-               onClick={() => setTheme(isDarkMode ? "light" : "dark")}
-            >
-               {isDarkMode ? (
-                  <Sun className="w-4 h-4" />
-               ) : (
-                  <Moon className="w-4 h-4" />
-               )}
-            </Button>
-         </div>
+                  <Button
+                     variant={isDarkMode ? "default" : "outline"}
+                     onClick={() => setTheme(isDarkMode ? "light" : "dark")}
+                  >
+                     {isDarkMode ? (
+                        <Sun className="w-4 h-4" />
+                     ) : (
+                        <Moon className="w-4 h-4" />
+                     )}
+                  </Button>
+               </div>
 
-         {/* Space Info */}
-         <div className="pl-2 my-3">
-            <span className="text-4xl font-semibold">{space?.title}</span>
-         </div>
+               {/* Space Info */}
+               <div className="pl-2 my-3">
+                  <span className="text-4xl font-semibold">{space?.title}</span>
+               </div>
 
-         {/* Post */}
-         <div className="w-full flex items-center justify-start flex-wrap gap-5">
-            {space?.posts.map((post) => (
-               <PostCard key={post.id} post={post} shareMode={true} />
-            ))}
-         </div>
+               {/* Post */}
+               <div className="w-full flex items-center justify-start flex-wrap gap-5">
+                  {space?.posts.map((post) => (
+                     <PostCard key={post.id} post={post} shareMode={true} />
+                  ))}
+               </div>
+            </>
+         )}
       </div>
    );
 };

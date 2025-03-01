@@ -134,6 +134,7 @@ const Sidebar = ({ showSidebar }: SidebarProps) => {
 
          fetchContainers();
          setIsOpen(false);
+         navigate(`/spaces/${res.data?.container.id}`);
       } catch (err) {
          console.error(err);
 
