@@ -37,7 +37,7 @@ const SpaceController = () => {
       "INSTAGRAM",
    ]);
    const [contentType, setContentType] = useState<ContentType>("TWITTER");
-   const [loading, setLoading] = useState(false);
+   const [loading, setLoading] = useState(true);
 
    const validateLink = (link: string, contentType: ContentType) => {
       if (contentType === "TWITTER") {
@@ -204,7 +204,7 @@ const SpaceController = () => {
    };
 
    useEffect(() => {
-      // fetchPosts();
+      fetchPosts();
    }, [spaceId]);
 
    if (loading) {
