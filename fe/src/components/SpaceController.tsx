@@ -41,12 +41,16 @@ const SpaceController = () => {
 
    const validateLink = (link: string, contentType: ContentType) => {
       if (contentType === "TWITTER") {
-         return (
+         if (
             link.startsWith("https://x.com/") ||
             link.startsWith("https://www.x.com/") ||
             link.startsWith("https://twitter.com/") ||
             link.startsWith("https://www.twitter.com/")
-         );
+         ) {
+            const match = link.match(/status\/(\d+)/);
+
+            return match ? true : false;
+         }
       }
 
       if (contentType === "YOUTUBE") {
@@ -76,7 +80,9 @@ const SpaceController = () => {
       try {
          // todo validate link
          if (!validateLink(link, contentType)) {
-            return toast.error(`Link not a ${contentType.toLowerCase()} link`);
+            return toast.error(
+               `Link not a ${contentType.toLowerCase()} link/post`
+            );
          }
 
          const res = await axios.post(

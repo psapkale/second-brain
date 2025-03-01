@@ -10,6 +10,7 @@ import { Check, Ellipsis, Pencil, Trash } from "lucide-react";
 import { useTheme } from "@/context/themeContext";
 import { Input } from "./ui/input";
 import { format } from "date-fns";
+import { Tweet } from "react-tweet";
 
 interface PostCardProps {
    post: PostData;
@@ -135,8 +136,15 @@ const PostCard = ({
 
    const loadTwittrContent = () => {
       let adjustedLink = post.link;
+      let id;
       if (post.link.includes("x.com")) {
          adjustedLink = post.link.replace("x.com", "twitter.com");
+         const match = adjustedLink.match(/status\/(\d+)/);
+         id = match ? match[1] : null;
+      }
+
+      if (!id) {
+         return <div className="py-2">Post not found</div>;
       }
 
       return (
@@ -147,7 +155,7 @@ const PostCard = ({
                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
             }}
          >
-            <blockquote
+            {/* <blockquote
                className="twitter-tweet w-full"
                data-theme={theme}
                style={{
@@ -156,7 +164,8 @@ const PostCard = ({
                }}
             >
                <a href={adjustedLink}></a>
-            </blockquote>
+            </blockquote> */}
+            <Tweet id={id} />
          </div>
       );
    };
