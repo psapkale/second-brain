@@ -5,7 +5,19 @@ export const useUser = () => {
    const getUser = () => {
       const userData = localStorage.getItem("userData");
 
-      return userData ? JSON.parse(userData) : null;
+      if (userData) {
+         const { createdAt, ...rest } = JSON.parse(userData);
+
+         // 28 days
+         if (_.now() - createdAt >= 28 * 24 * 60 * 60 * 1000) {
+            removeUser();
+            return null;
+         }
+
+         return { ...rest, createdAt };
+      }
+
+      return null;
    };
 
    const udpateUserToken = (token: string) => {
@@ -26,7 +38,19 @@ export const useUser = () => {
    const getToken = () => {
       const userData = localStorage.getItem("userData");
 
-      return userData ? JSON.parse(userData)?.token : null;
+      if (userData) {
+         const { token, createdAt } = JSON.parse(userData);
+
+         // 28 days
+         if (_.now() - createdAt >= 28 * 24 * 60 * 60 * 1000) {
+            removeUser();
+            return null;
+         }
+
+         return token;
+      }
+
+      return null;
    };
 
    const removeUser = () => localStorage.removeItem("userData");
