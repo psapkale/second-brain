@@ -1,12 +1,16 @@
+import { useSidebar } from "@/context/sidebarContext";
 import { useTheme } from "@/context/themeContext";
 
 const SelectSpacePlaceholder = () => {
+   const { showSidebar } = useSidebar();
    const { theme } = useTheme();
    const isDarkMode = theme === "dark";
 
    return (
       <div
-         className="w-full flex items-center justify-center gap-3 flex-col"
+         className={`${
+            showSidebar ? "hidden w-0 sm:w-full sm:flex" : "w-full"
+         } flex items-center justify-center gap-3 flex-col`}
          style={{
             backgroundColor: isDarkMode ? "black" : "",
          }}
@@ -19,7 +23,7 @@ const SelectSpacePlaceholder = () => {
                   : "/sleeping-duck.png"
             }
             alt="space-placeholder"
-            className="w-[20vw] h-[42vh]"
+            className="w-[50vw] h-[42vh] object-contain"
          />
          <span
             className={`${

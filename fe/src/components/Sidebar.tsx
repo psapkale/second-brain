@@ -38,12 +38,10 @@ import {
    DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useTheme } from "@/context/themeContext";
+import { useSidebar } from "@/context/sidebarContext";
 
-interface SidebarProps {
-   showSidebar: boolean;
-}
-
-const Sidebar = ({ showSidebar }: SidebarProps) => {
+const Sidebar = () => {
+   const { showSidebar } = useSidebar();
    const { getUser, getToken, removeUser } = useUser();
    const user: UserData = getUser();
    const token: string = getToken();
@@ -278,7 +276,7 @@ const Sidebar = ({ showSidebar }: SidebarProps) => {
             isDarkMode
                ? "bg-black text-white border-[#171717]"
                : "bg-white border-slate-200"
-         } border-r-2 w-screen md:w-[30%] lg:w-[20%] h-full top-0 left-0 py-4 px-3 flex gap-5 flex-col `}
+         } border-r-2 w-full md:w-[30%] lg:w-[20%] h-full top-0 left-0 py-4 px-3 flex gap-5 flex-col`}
       >
          <div className="text-4xl font-semibold flex gap-2 items-end">
             <Space />

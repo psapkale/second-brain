@@ -21,8 +21,10 @@ import { Skeleton } from "primereact/skeleton";
 import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
 import PostCard from "./PostCard";
 import { useTheme } from "@/context/themeContext";
+import { useSidebar } from "@/context/sidebarContext";
 
 const SpaceController = () => {
+   const { showSidebar } = useSidebar();
    const { spaceId } = useParams();
    const token = useUser().getToken();
    const { theme } = useTheme();
@@ -217,8 +219,10 @@ const SpaceController = () => {
       return (
          <div
             className={`${
+               showSidebar ? "hidden w-0 sm:w-full sm:flex" : "w-full"
+            } ${
                isDarkMode ? "bg-black text-white" : ""
-            } w-full p-3 md:p-10 h-screen flex flex-wrap items-center justify-start gap-4`}
+            } p-3 md:p-10 h-screen flex flex-wrap items-center justify-start gap-4`}
          >
             <Skeleton
                width="400px"
@@ -247,8 +251,8 @@ const SpaceController = () => {
    return (
       <div
          className={`${
-            isDarkMode ? "bg-black" : ""
-         } w-full p-3 md:p-10 overflow-y-scroll`}
+            showSidebar ? "hidden w-0 sm:w-full sm:block" : "w-full"
+         } ${isDarkMode ? "bg-black" : ""} p-3 md:p-10 overflow-y-scroll`}
       >
          {!posts.length ? (
             <div

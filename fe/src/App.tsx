@@ -8,6 +8,7 @@ import Layout from "./pages/routes/Layout";
 import SpaceController from "./components/SpaceController";
 import { ThemeProvider, useTheme } from "./context/themeContext";
 import SharedSpace from "./pages/routes/SharedSpace";
+import { SidebarProvider } from "./context/sidebarContext";
 
 function App() {
    const router = createBrowserRouter([
@@ -42,8 +43,10 @@ function App() {
 
    return (
       <ThemeProvider>
-         <Toaster position="bottom-center" theme={theme} />
-         <RouterProvider router={router} />
+         <SidebarProvider>
+            <Toaster position="bottom-center" theme={theme} />
+            <RouterProvider router={router} />
+         </SidebarProvider>
       </ThemeProvider>
    );
 }

@@ -1,13 +1,13 @@
 import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import SelectSpacePlaceholder from "../../components/SelectSpacePlaceholder";
-import { useState } from "react";
 import { SidebarClose } from "lucide-react";
 import { useTheme } from "@/context/themeContext";
+import { useSidebar } from "@/context/sidebarContext";
 
 const Layout = () => {
+   const { showSidebar, setShowSidebar } = useSidebar();
    const location = useLocation();
-   const [showSidebar, setShowSidebar] = useState(true);
    const { theme } = useTheme();
    const isDarkMode = theme === "dark";
 
@@ -20,8 +20,8 @@ const Layout = () => {
             onClick={() => setShowSidebar(!showSidebar)}
          />
 
-         <div className="h-screen flex">
-            <Sidebar showSidebar={showSidebar} />
+         <div className="w-full h-screen flex">
+            <Sidebar />
             {location.pathname.endsWith("spaces") ||
             location.pathname.endsWith("spaces/") ? (
                <SelectSpacePlaceholder />
