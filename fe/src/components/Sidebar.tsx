@@ -319,29 +319,18 @@ const Sidebar = () => {
          {/* Spaces container */}
          {loading ? (
             <div className="flex gap-2 flex-col">
-               <Skeleton
-                  height="30px"
-                  className={`${isDarkMode ? "bg-[#0e1114]" : ""}`}
-               />
-               <Skeleton
-                  height="30px"
-                  className={`${isDarkMode ? "bg-[#0e1114]" : ""}`}
-               />
-               <Skeleton
-                  height="30px"
-                  className={`${isDarkMode ? "bg-[#0e1114]" : ""}`}
-               />
-               <Skeleton
-                  height="30px"
-                  className={`${isDarkMode ? "bg-[#0e1114]" : ""}`}
-               />
-               <Skeleton
-                  height="30px"
-                  className={`${isDarkMode ? "bg-[#0e1114]" : ""}`}
-               />
+               {Array(10)
+                  .fill("")
+                  .map((_, idx) => (
+                     <Skeleton
+                        key={Math.random() * idx + 1}
+                        height="30px"
+                        className={`${isDarkMode ? "bg-[#0e1114]" : ""}`}
+                     />
+                  ))}
             </div>
          ) : (
-            <div className="flex gap-2 flex-col">
+            <div className="max-h-[60vh] flex gap-2 flex-col overflow-y-scroll no-scrollbar">
                {spaces
                   .sort(
                      (a, b) =>
@@ -393,7 +382,10 @@ const Sidebar = () => {
                                  <Ellipsis
                                     className="w-4 h-4"
                                     style={{
-                                       opacity: spaceId === space.id ? 1 : 0,
+                                       display:
+                                          spaceId === space.id
+                                             ? "block"
+                                             : "none",
                                     }}
                                  />
                               </DropdownMenuTrigger>
@@ -455,7 +447,7 @@ const Sidebar = () => {
          )}
 
          <Dialog open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
-            <DialogTrigger asChild>
+            <DialogTrigger asChild className="sticky bottom-12">
                <Button
                   variant={isDarkMode ? "default" : "outline"}
                   onClick={() => setIsOpen(true)}
