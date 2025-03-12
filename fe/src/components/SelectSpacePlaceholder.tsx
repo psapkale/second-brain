@@ -23,7 +23,7 @@ const SelectSpacePlaceholder = () => {
                   : "/sleeping-duck.png"
             }
             alt="space-placeholder"
-            className="w-[50vw] h-[42vh] object-contain"
+            className="w-[50vw] sm:w-[18vw] h-[42vh] object-contain sm:object-fill"
          />
          <span
             className={`${

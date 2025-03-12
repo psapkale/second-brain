@@ -325,12 +325,12 @@ const Sidebar = () => {
                      <Skeleton
                         key={Math.random() * idx + 1}
                         height="30px"
-                        className={`${isDarkMode ? "bg-[#0e1114]" : ""}`}
+                        className={`${isDarkMode ? "bg-[#0e1114]" : ""} px-2`}
                      />
                   ))}
             </div>
          ) : (
-            <div className="max-h-[60vh] flex gap-2 flex-col overflow-y-scroll no-scrollbar">
+            <div className="max-w-full max-h-[60vh] flex gap-2 flex-col overflow-y-scroll no-scrollbar">
                {spaces
                   .sort(
                      (a, b) =>
@@ -369,7 +369,9 @@ const Sidebar = () => {
                               />
                            </div>
                         ) : (
-                           <span className="capitalize">{space.title}</span>
+                           <span className="capitalize w-[80%] overflow-x-scroll no-scrollbar">
+                              {space.title}
+                           </span>
                         )}
                         {isRenaming && space.id === spaceId ? (
                            <Check
