@@ -1,4 +1,5 @@
 import { prisma } from "../../db/prisma.js";
+import { validateOwner } from "../auth/validateOwner.js";
 
 export const deletePost = async (req, res) => {
    const { containerId, postId } = req.params;
@@ -8,6 +9,22 @@ export const deletePost = async (req, res) => {
    }
 
    try {
+      const container = await prisma.container.findUnique({
+         where: {
+            id: containerId,
+         },
+      });
+
+      if (!container) {
+         throw new Error("Container not found");
+      }
+
+      const notOwnerErr = validateOwner(req, container.creatorId);
+
+      if (notOwnerErr) {
+         throw await notOwnerErr;
+      }
+
       let post = await prisma.post.findUnique({
          where: {
             id: postId,

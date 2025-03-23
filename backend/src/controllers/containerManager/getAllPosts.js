@@ -1,4 +1,5 @@
 import { prisma } from "../../db/prisma.js";
+import { validateOwner } from "../auth/validateOwner.js";
 
 export const getAllPosts = async (req, res) => {
    const { containerId } = req.params;
@@ -15,6 +16,12 @@ export const getAllPosts = async (req, res) => {
 
       if (!container) {
          throw new Error("Container not found");
+      }
+
+      const notOwnerErr = validateOwner(req, container.creatorId);
+
+      if (notOwnerErr) {
+         throw await notOwnerErr;
       }
 
       res.status(200).json({

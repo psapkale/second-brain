@@ -1,4 +1,5 @@
 import { prisma } from "../../db/prisma.js";
+import { validateOwner } from "../auth/validateOwner.js";
 
 export const deleteContainer = async (req, res) => {
    const { email } = req.userData;
@@ -49,6 +50,12 @@ export const deleteContainer = async (req, res) => {
 
       if (!container) {
          throw new Error("Failed to delete container");
+      }
+
+      const notOwnerErr = validateOwner(req, container.creatorId);
+
+      if (notOwnerErr) {
+         throw await notOwnerErr;
       }
 
       res.status(200).json({

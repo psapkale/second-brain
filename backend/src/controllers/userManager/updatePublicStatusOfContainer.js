@@ -1,5 +1,6 @@
 import { prisma } from "../../db/prisma.js";
 import { ContainerZodUpdateStatusSchema } from "../../schemaTypes/index.js";
+import { validateOwner } from "../auth/validateOwner.js";
 
 export const updatePublicStatusOfContainer = async (req, res) => {
    const { email } = req.userData;
@@ -24,6 +25,12 @@ export const updatePublicStatusOfContainer = async (req, res) => {
 
       if (!container) {
          throw new Error("Container not found");
+      }
+
+      const notOwnerErr = validateOwner(req, container.creatorId);
+
+      if (notOwnerErr) {
+         throw await notOwnerErr;
       }
 
       const updatedContainer = await prisma.container.update({

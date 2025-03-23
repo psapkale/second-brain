@@ -1,4 +1,5 @@
 import { prisma } from "../../db/prisma.js";
+import { validateOwner } from "../auth/validateOwner.js";
 
 export const renameContainer = async (req, res) => {
    const { containerId } = req.params;
@@ -19,6 +20,12 @@ export const renameContainer = async (req, res) => {
 
       if (!container) {
          throw new Error("Container not found");
+      }
+
+      const notOwnerErr = validateOwner(req, container.creatorId);
+
+      if (notOwnerErr) {
+         throw await notOwnerErr;
       }
 
       container = await prisma.container.update({
