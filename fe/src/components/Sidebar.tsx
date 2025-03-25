@@ -39,6 +39,7 @@ import {
 } from "./ui/dropdown-menu";
 import { useTheme } from "@/context/themeContext";
 import { useSidebar } from "@/context/sidebarContext";
+import { motion } from "framer-motion";
 
 const Sidebar = () => {
    const { showSidebar } = useSidebar();
@@ -269,7 +270,10 @@ const Sidebar = () => {
    }
 
    return (
-      <div
+      <motion.div
+         initial={{ opacity: 0, x: 10 }}
+         animate={{ opacity: 1, x: 0 }}
+         transition={{ duration: 0.3 }}
          className={`${
             showSidebar ? "translate-x-0" : "-translate-x-full hidden"
          } ${
@@ -278,24 +282,39 @@ const Sidebar = () => {
                : "bg-white border-slate-200"
          } border-r-2 w-full md:w-[30%] lg:w-[20%] h-full top-0 left-0 py-4 px-3 flex gap-5 flex-col`}
       >
-         <div className="text-4xl font-semibold flex gap-2 items-end">
+         <motion.div
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+            className="text-4xl font-semibold flex gap-2 items-end"
+         >
             <Space />
             <span>Pro.</span>
             <span>Space</span>
-         </div>
+         </motion.div>
 
          {/* User info */}
-         <div className="flex items-center gap-2">
+         <motion.div
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+            className="flex items-center gap-2"
+         >
             <img
                src={user.imgUrl}
                alt={user.name}
                className="w-8 rounded-full object-cover"
             />
             <span>{user.name}'s Spaces</span>
-         </div>
+         </motion.div>
 
          {/* Theme */}
-         <div className="flex items-center gap-3">
+         <motion.div
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+            className="flex items-center gap-3"
+         >
             <Button
                variant={isDarkMode ? "default" : "outline"}
                onClick={() => setTheme(isDarkMode ? "light" : "dark")}
@@ -314,7 +333,7 @@ const Sidebar = () => {
                <span>Sign out</span>
                <LogOut />
             </Button>
-         </div>
+         </motion.div>
 
          {/* Spaces container */}
          {loading ? (
@@ -330,7 +349,12 @@ const Sidebar = () => {
                   ))}
             </div>
          ) : (
-            <div className="max-w-full max-h-[60vh] flex gap-2 flex-col overflow-y-scroll no-scrollbar">
+            <motion.div
+               initial={{ opacity: 0, x: 10 }}
+               animate={{ opacity: 1, x: 0 }}
+               transition={{ duration: 0.3 }}
+               className="max-w-full max-h-[60vh] flex gap-2 flex-col overflow-y-scroll no-scrollbar"
+            >
                {spaces
                   .sort(
                      (a, b) =>
@@ -445,7 +469,7 @@ const Sidebar = () => {
                         )}
                      </Link>
                   ))}
-            </div>
+            </motion.div>
          )}
 
          <Dialog open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
@@ -491,7 +515,7 @@ const Sidebar = () => {
                </DialogFooter>
             </DialogContent>
          </Dialog>
-      </div>
+      </motion.div>
    );
 };
 

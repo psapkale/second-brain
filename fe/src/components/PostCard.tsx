@@ -11,6 +11,7 @@ import { useTheme } from "@/context/themeContext";
 import { Input } from "./ui/input";
 import { format } from "date-fns";
 import { Tweet } from "react-tweet";
+import { motion } from "framer-motion";
 
 interface PostCardProps {
    post: PostData;
@@ -249,7 +250,10 @@ const PostCard = ({
    };
 
    return (
-      <div
+      <motion.div
+         initial={{ opacity: 0, x: 20 }}
+         animate={{ opacity: 1, x: 0 }}
+         transition={{ duration: 0.8 }}
          style={{
             width: post.contentType === "YOUTUBE" ? 600 : 400,
          }}
@@ -328,7 +332,7 @@ const PostCard = ({
                   .join(" ")}
             </div>
          </div>
-      </div>
+      </motion.div>
    );
 };
 
