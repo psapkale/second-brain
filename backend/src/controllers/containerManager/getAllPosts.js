@@ -18,10 +18,10 @@ export const getAllPosts = async (req, res) => {
          throw new Error("Container not found");
       }
 
-      const notOwnerErr = validateOwner(req, container.creatorId);
+      const notOwnerErr = await validateOwner(req, container.creatorId);
 
       if (notOwnerErr) {
-         throw await notOwnerErr;
+         throw notOwnerErr;
       }
 
       res.status(200).json({

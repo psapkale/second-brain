@@ -16,4 +16,6 @@ export const validateOwner = async (req, id) => {
    if (user.id !== id) {
       return Error("Unauthorized to perform action");
    }
+
+   return null;
 };

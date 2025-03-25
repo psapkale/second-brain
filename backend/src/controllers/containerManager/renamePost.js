@@ -26,10 +26,10 @@ export const renamePost = async (req, res) => {
          throw new Error("Container not found");
       }
 
-      const notOwnerErr = validateOwner(req, container.creatorId);
+      const notOwnerErr = await validateOwner(req, container.creatorId);
 
       if (notOwnerErr) {
-         throw await notOwnerErr;
+         throw notOwnerErr;
       }
 
       let post = await prisma.post.findUnique({

@@ -22,10 +22,10 @@ export const renameContainer = async (req, res) => {
          throw new Error("Container not found");
       }
 
-      const notOwnerErr = validateOwner(req, container.creatorId);
+      const notOwnerErr = await validateOwner(req, container.creatorId);
 
       if (notOwnerErr) {
-         throw await notOwnerErr;
+         throw notOwnerErr;
       }
 
       container = await prisma.container.update({

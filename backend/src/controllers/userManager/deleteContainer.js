@@ -52,10 +52,10 @@ export const deleteContainer = async (req, res) => {
          throw new Error("Failed to delete container");
       }
 
-      const notOwnerErr = validateOwner(req, container.creatorId);
+      const notOwnerErr = await validateOwner(req, container.creatorId);
 
       if (notOwnerErr) {
-         throw await notOwnerErr;
+         throw notOwnerErr;
       }
 
       res.status(200).json({
