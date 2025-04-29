@@ -361,7 +361,7 @@ const Sidebar = () => {
             />
           </div>
           <DialogFooter>
-            <Button onClick={handleCreateSpace}>
+            <Button onClick={handleCreateSpace} disabled={isLoading}>
               <PlusCircle />
               <span>Create Space</span>
             </Button>

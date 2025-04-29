@@ -12,7 +12,13 @@ import { SidebarProvider } from './context/sidebarContext';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const queryClinet = new QueryClient();
+const queryClinet = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 
 function App() {
   const router = createBrowserRouter([

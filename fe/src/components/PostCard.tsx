@@ -142,7 +142,11 @@ const PostCard = ({
     }
 
     if (!id) {
-      return <div className="py-2">Post not found</div>;
+      return (
+        <div className="mt-2 p-2 text-red-500/80 rounded-lg">
+          Post not found
+        </div>
+      );
     }
 
     return (

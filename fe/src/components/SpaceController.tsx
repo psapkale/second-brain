@@ -255,7 +255,9 @@ const SpaceController = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={handleCreatePost}>Add post</Button>
+            <Button onClick={handleCreatePost} disabled={isLoading}>
+              Add post
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
