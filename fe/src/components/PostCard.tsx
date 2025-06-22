@@ -12,6 +12,7 @@ import { Input } from './ui/input';
 import { format } from 'date-fns';
 import { Tweet } from 'react-tweet';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 interface PostCardProps {
   post: PostData;
@@ -157,16 +158,6 @@ const PostCard = ({
           boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
         }}
       >
-        {/* <blockquote
-               className="twitter-tweet w-full"
-               data-theme={theme}
-               style={{
-                  maxWidth: "100%",
-                  boxSizing: "border-box",
-               }}
-            >
-               <a href={adjustedLink}></a>
-            </blockquote> */}
         <Tweet id={id} />
       </div>
     );
@@ -324,11 +315,17 @@ const PostCard = ({
           </div>
         </div>
         {renderContent()}
-        <div className="text-sm text-gray-500 dark:text-gray-400 pt-2 flex items-end">
-          Added on{' '}
-          {format(new Date(post.createdAt), 'dd-MMM-yy h:mm a')
-            .split('-')
-            .join(' ')}
+        <div className="text-sm text-gray-500 dark:text-gray-400 pt-2 flex items-center justify-between">
+          <div>
+            Added on{' '}
+            {format(new Date(post.createdAt), 'dd-MMM-yy h:mm a')
+              .split('-')
+              .join(' ')}
+          </div>
+          <Link to={post.link} target="_blanck">
+            <span className="underline decoration-dashed">Jump</span>
+            <span className="ml-1">🚀</span>
+          </Link>
         </div>
       </div>
     </motion.div>

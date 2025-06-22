@@ -151,39 +151,19 @@ const SpaceController = () => {
         isDarkMode ? 'bg-black' : ''
       } p-3 md:p-10 overflow-y-scroll`}
     >
-      {!space?.data?.posts.length ? (
-        <div
-          className={`h-[86vh] flex items-center justify-center ${
-            isDarkMode ? 'text-white' : ''
-          }`}
-        >
-          <h1 className="text-lg">No post in this space.</h1>
-        </div>
-      ) : (
-        <div className="flex items-center justify-start flex-wrap gap-5">
-          {space?.data?.posts
-            .sort(
-              (a: PostData, b: PostData) =>
-                new Date(a.createdAt).getTime() -
-                new Date(b.createdAt).getTime()
-            )
-            .map((post: PostData) => (
-              <PostCard
-                key={post.id}
-                post={post}
-                shareMode={false}
-                handleDeletePost={handleDeletePost}
-                handleRenamePost={handleRenamePost}
-              />
-            ))}
-        </div>
-      )}
+      <h1
+        className={`text-7xl font-bold capitalize ${
+          isDarkMode ? 'text-white' : 'text-black'
+        }`}
+      >
+        {space?.data?.containerTitle}
+      </h1>
 
       <Dialog open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
         <DialogTrigger asChild>
           <Button
-            variant={'default'}
-            className="fixed bottom-10 right-10"
+            variant={isDarkMode ? 'default' : 'outline'}
+            className="mt-8"
             onClick={() => setIsOpen(true)}
           >
             <PlusCircle />
@@ -255,12 +235,40 @@ const SpaceController = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={handleCreatePost} disabled={isLoading}>
+            <Button onClick={handleCreatePost} disabled={isLoading} variant={isDarkMode ? 'default' : 'outline'}>
               Add post
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {!space?.data?.posts.length ? (
+        <div
+          className={`h-[86vh] flex items-center justify-center ${
+            isDarkMode ? 'text-white' : ''
+          }`}
+        >
+          <h1 className="text-lg">No post in this space.</h1>
+        </div>
+      ) : (
+        <div className="mt-8 flex items-center justify-start flex-wrap gap-5">
+          {space?.data?.posts
+            .sort(
+              (a: PostData, b: PostData) =>
+                new Date(a.createdAt).getTime() -
+                new Date(b.createdAt).getTime()
+            )
+            .map((post: PostData) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                shareMode={false}
+                handleDeletePost={handleDeletePost}
+                handleRenamePost={handleRenamePost}
+              />
+            ))}
+        </div>
+      )}
     </div>
   );
 };

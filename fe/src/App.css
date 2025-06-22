@@ -1,19 +1,24 @@
 .custom-scrollbar::-webkit-scrollbar {
-   width: 2px;
+  width: 2px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-   background-color: #ebebeb;
-   -webkit-border-radius: 10px;
-   border-radius: 10px;
+  background-color: #ebebeb;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-   -webkit-border-radius: 10px;
-   border-radius: 10px;
-   background: rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .no-scrollbar::-webkit-scrollbar {
-   display: none;
+  display: none;
+}
+
+::selection {
+  color: #7149C6;
+  background: #191825;
 }

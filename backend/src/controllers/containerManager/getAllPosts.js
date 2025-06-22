@@ -26,6 +26,7 @@ export const getAllPosts = async (req, res) => {
 
       res.status(200).json({
          message: `All post of '${container.title}'`,
+         containerTitle: container.title,
          posts: container.posts,
       });
    } catch (err) {
